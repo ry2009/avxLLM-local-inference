@@ -8,6 +8,10 @@ Steps to maximize local CPU inference performance on Mac/AVX hosts.
      runtime now calls `torch.set_num_threads` and records the configured value
      so you can inspect it later.
 
+2. **Cache prompts**
+   - Export `INFENG_TOKEN_CACHE=<entries>` (or pass `token_cache_size`) to avoid
+     re-tokenizing identical prompts during sweeps/CI smoke tests.
+
 2. **Warm caches**
    - Run `make run-manifest` to download the sample model/adapters.
    - Run `make run-ci-smoke` once; this primes tokenizer caches and the HF

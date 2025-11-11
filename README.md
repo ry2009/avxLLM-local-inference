@@ -44,7 +44,7 @@ python tools/download_assets.py \
   --adapter-id theone049/agriqa-tinyllama-lora-adapter --adapter-dir adapters/agriqa
 ```
 Prefer a single command? `scripts/run_local_inference.py` will download `sshleifer/tiny-gpt2`, load an optional adapter, and emit telemetry in one go.
-To pin CPU threads for max throughput, set `INFENG_NUM_THREADS=<logical cores>` before running the scripts (or pass `num_threads` to `CpuPeftRuntime`).
+To pin CPU threads for max throughput, set `INFENG_NUM_THREADS=<logical cores>` before running the scripts (or pass `num_threads` to `CpuPeftRuntime`). Enable prompt caching by exporting `INFENG_TOKEN_CACHE=<size>` or passing `token_cache_size` when constructing the runtime to skip repeated tokenization work.
 
 ### 2. Native Engine Build (C++ kernels)
 ```bash

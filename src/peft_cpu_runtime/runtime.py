@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import time
 import os
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import torch
+from torch.nn.utils.rnn import pad_sequence
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 
@@ -69,6 +70,7 @@ class CpuPeftRuntime:
         torch_dtype: torch.dtype = torch.float32,
         use_fast_tokenizer: bool = True,
         num_threads: Optional[int] = None,
+        token_cache_size: int = 0,
     ) -> None:
         """
         Parameters
@@ -105,6 +107,17 @@ class CpuPeftRuntime:
         if thread_override is not None:
             torch.set_num_threads(thread_override)
         self._num_threads = thread_override
+
+        cache_size = token_cache_size
+        if cache_size <= 0:
+            env_cache = os.environ.get("INFENG_TOKEN_CACHE")
+            if env_cache:
+                try:
+                    cache_size = int(env_cache)
+                except ValueError:
+                    raise ValueError("INFENG_TOKEN_CACHE must be an integer") from None
+        self._token_cache_size = max(0, cache_size)
+        self._token_cache: OrderedDict[str, Tuple[torch.Tensor, torch.Tensor]] = OrderedDict()
 
         model = AutoModelForCausalLM.from_pretrained(
             base_model_id,
@@ -305,6 +318,10 @@ class CpuPeftRuntime:
     def num_threads(self) -> Optional[int]:
         return self._num_threads
 
+    @property
+    def token_cache_size(self) -> int:
+        return self._token_cache_size
+
     def get_last_profile(self) -> Optional[List[Dict[str, float]]]:
         return self._last_profile
 
@@ -312,9 +329,60 @@ class CpuPeftRuntime:
         self._overlap_enabled = enabled
         self._overlap_workers = max(1, max_workers)
 
+    def _prune_token_cache(self) -> None:
+        while len(self._token_cache) > self._token_cache_size:
+            self._token_cache.popitem(last=False)
+
+    def _cache_tokens(self, prompt: str, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> None:
+        if self._token_cache_size <= 0:
+            return
+        self._token_cache[prompt] = (
+            input_ids.clone().detach(),
+            attention_mask.clone().detach(),
+        )
+        self._token_cache.move_to_end(prompt)
+        self._prune_token_cache()
+
+    def _fetch_cached_tokens(self, prompt: str) -> Optional[Tuple[torch.Tensor, torch.Tensor]]:
+        if self._token_cache_size <= 0:
+            return None
+        entry = self._token_cache.get(prompt)
+        if entry is None:
+            return None
+        self._token_cache.move_to_end(prompt)
+        return entry[0].clone(), entry[1].clone()
+
     def _tokenize_requests(self, requests: List[InferenceRequest]):
         start = time.perf_counter()
         prompts = [req.prompt for req in requests]
-        inputs = self.tokenizer(prompts, padding=True, return_tensors="pt")
+        if self._token_cache_size <= 0:
+            inputs = self.tokenizer(prompts, padding=True, return_tensors="pt")
+        else:
+            sequences: List[Tuple[torch.Tensor, torch.Tensor]] = []
+            missing_prompts: List[str] = []
+            missing_indices: List[int] = []
+            for idx, prompt in enumerate(prompts):
+                cached = self._fetch_cached_tokens(prompt)
+                if cached is None:
+                    sequences.append((None, None))  # type: ignore[arg-type]
+                    missing_prompts.append(prompt)
+                    missing_indices.append(idx)
+                else:
+                    sequences.append(cached)
+            if missing_prompts:
+                batch = self.tokenizer(missing_prompts, padding=True, return_tensors="pt")
+                ids = batch["input_ids"]
+                masks = batch["attention_mask"]
+                for offset, idx in enumerate(missing_indices):
+                    prompt = missing_prompts[offset]
+                    prompt_ids = ids[offset : offset + 1]
+                    prompt_mask = masks[offset : offset + 1]
+                    self._cache_tokens(prompt, prompt_ids, prompt_mask)
+                    sequences[idx] = (prompt_ids.clone(), prompt_mask.clone())
+            seq_ids = [seq[0].squeeze(0) for seq in sequences]
+            seq_masks = [seq[1].squeeze(0) for seq in sequences]
+            padded_ids = pad_sequence(seq_ids, batch_first=True, padding_value=self.tokenizer.pad_token_id or 0)
+            padded_masks = pad_sequence(seq_masks, batch_first=True, padding_value=0)
+            inputs = {"input_ids": padded_ids, "attention_mask": padded_masks}
         elapsed = time.perf_counter() - start
         return inputs, elapsed

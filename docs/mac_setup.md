@@ -70,3 +70,4 @@ make check-mac    # run scripts/check_mac_env.py to confirm toolchain availabili
 Export `HF_TOKEN` (or use the `--token` flag) if your Hugging Face repos require authentication.
 Set `INFENG_NUM_THREADS=<logical cores>` before running inference scripts to
 pin PyTorch thread pools for maximum throughput on macOS.
+Enable prompt caching for repeated demos with `INFENG_TOKEN_CACHE=<size>`.

@@ -48,6 +48,19 @@ class _FakeAutoTokenizer:
         return _FakeTokenizer()
 
 
+class _CountingTokenizer(_FakeTokenizer):
+    def __init__(self) -> None:
+        super().__init__()
+        self.calls = 0
+
+    def __call__(self, prompts, padding=True, return_tensors="pt"):
+        if isinstance(prompts, list):
+            self.calls += len(prompts)
+        else:
+            self.calls += 1
+        return super().__call__(prompts if isinstance(prompts, list) else [prompts], padding=padding, return_tensors=return_tensors)
+
+
 class _FakeModel:
     def eval(self):
         return self
@@ -137,3 +150,24 @@ def test_runtime_env_threads(monkeypatch):
     )
     assert runtime.num_threads == 4
     assert captured["value"] == 4
+
+
+def test_token_cache_hits(monkeypatch):
+    tokenizer = _CountingTokenizer()
+
+    monkeypatch.setattr(runtime_mod.AutoTokenizer, "from_pretrained", staticmethod(lambda *args, **kwargs: tokenizer))
+    monkeypatch.setattr(runtime_mod, "AutoModelForCausalLM", _FakeAutoModel)
+    runtime = runtime_mod.CpuPeftRuntime(
+        base_model_id="dummy",
+        adapter_map={},
+        torch_dtype=torch.float32,
+        token_cache_size=8,
+    )
+
+    batch = runtime_mod.RequestBatch(
+        requests=[runtime_mod.InferenceRequest(prompt="Repeat me")],
+        trace_config=runtime_mod.InferenceTraceConfig(max_new_tokens=2),
+    )
+    runtime.generate(batch)
+    runtime.generate(batch)
+    assert tokenizer.calls == 1
