@@ -65,6 +65,7 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/run_local_training.py` — fine-tunes a tiny LoRA adapter on `data/distill_math.jsonl`; outputs land in `adapters/quickstart-trained`.
 - `scripts/run_local_pretrain.py` — pre-trains a miniature causal LM checkpoint on `data/wiki_subset.jsonl` and writes it to `checkpoints/tiny-pretrain-cpu`.
 - `scripts/run_local_eval.py` — runs a prompt set (default `data/math_prompts.jsonl`) end-to-end and saves telemetry to `reports/local_eval_metrics.json`.
+- `scripts/run_end_to_end.py` — full pipeline: download base weights, train a LoRA adapter on `data/distill_pairs.jsonl`, and immediately evaluate prompts with telemetry (see `docs/quickstart_pipeline.md`).
 - `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features
@@ -83,6 +84,7 @@ Read `docs/engine_vision.md` and `docs/engine_roadmap.md` for the full breakdown
 
 For a telemetry deep dive (TPS, TTPS, TTFT, Rust↔C++ hand-off), see `docs/perf_metrics.md`.
 For macOS-specific toolchain notes (Homebrew, LLVM, Python/Rust steps), see `docs/mac_setup.md`.
+For a scripted end-to-end walkthrough, see `docs/quickstart_pipeline.md`.
 
 ## Development Workflow
 1. Prototype in Python (`peft_cpu_runtime`) to validate scheduler or telemetry ideas.
@@ -94,7 +96,7 @@ For macOS-specific toolchain notes (Homebrew, LLVM, Python/Rust steps), see `doc
 - `make setup` — create a virtualenv and install Python deps in editable mode.
 - `make cpp-build` / `make cpp-test` — configure + build the native engine and run Catch2/GTest suites.
 - `make py-test` — execute the Python runtime/tests (including the new telemetry/download coverage).
-- `make run-infer`, `make run-train`, `make run-pretrain`, `make run-eval` — invoke the helper scripts described above.
+- `make run-infer`, `make run-train`, `make run-pretrain`, `make run-eval`, `make run-pipeline` — invoke the helper scripts described above.
 - `make check-mac` — run the environment health check (`scripts/check_mac_env.py`).
 
 ## Contributing

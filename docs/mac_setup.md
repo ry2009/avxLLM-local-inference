@@ -45,6 +45,7 @@ ctest --test-dir build --output-on-failure
 - `scripts/run_local_training.py` — fine-tunes a LoRA adapter on `data/distill_math.jsonl` samples.
 - `scripts/run_local_pretrain.py` — builds a tiny causal LM checkpoint from `data/wiki_subset.jsonl`.
 - `scripts/run_local_eval.py` — feeds `data/math_prompts.jsonl` through the runtime and saves telemetry.
+- `scripts/run_end_to_end.py` — orchestrates download + LoRA training + evaluation (see `docs/quickstart_pipeline.md`).
 
 ## 6. Makefile shortcuts
 ```bash
@@ -53,6 +54,7 @@ make cpp-build    # configure + build native engine
 make test         # run Catch2 + pytest suites
 make run-infer    # execute the inference helper script with telemetry enabled
 make run-eval     # run the dataset-driven eval script + telemetry export
+make run-pipeline # end-to-end download/train/eval loop
 make check-mac    # run scripts/check_mac_env.py to confirm toolchain availability
 ```
 

@@ -22,6 +22,7 @@ def _load_script(filename: str):
 
 run_local_inference = _load_script("run_local_inference")
 run_local_eval = _load_script("run_local_eval")
+run_end_to_end = _load_script("run_end_to_end")
 check_mac_env = _load_script("check_mac_env")
 
 
@@ -114,3 +115,39 @@ def test_check_mac_env_json(monkeypatch, capsys):
     assert exit_code == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["cmake"]["available"] is True
+
+
+def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):
+    dataset = tmp_path / "train.jsonl"
+    dataset.write_text('{"text": "prompt"}\n')
+    eval_file = tmp_path / "eval.jsonl"
+    eval_file.write_text('{"text": "Eval"}\n')
+
+    monkeypatch.setattr(run_end_to_end, "snapshot_download", lambda **kwargs: tmp_path)
+
+    def fake_train(cfg):
+        adapter_dir = tmp_path / "adapter"
+        adapter_dir.mkdir(parents=True, exist_ok=True)
+        return adapter_dir
+
+    monkeypatch.setattr(run_end_to_end, "train_lora_adapter", fake_train)
+    monkeypatch.setattr(run_end_to_end, "CpuPeftRuntime", _FakeRuntime)
+
+    exit_code = run_end_to_end.main(
+        [
+            "--model-id",
+            "foo/base",
+            "--model-dir",
+            str(tmp_path / "model"),
+            "--dataset",
+            str(dataset),
+            "--eval-prompts",
+            str(eval_file),
+            "--eval-limit",
+            "1",
+        ]
+    )
+    assert exit_code == 0
+    stdout = capsys.readouterr().out.strip()
+    payload = json.loads(stdout)
+    assert payload["prompts"] == ["Eval"]

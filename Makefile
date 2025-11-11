@@ -39,5 +39,8 @@ run-pretrain:
 run-eval:
 	. $(VENV)/bin/activate && python scripts/run_local_eval.py --telemetry
 
+run-pipeline:
+	. $(VENV)/bin/activate && python scripts/run_end_to_end.py --telemetry
+
 check-mac:
 	python scripts/check_mac_env.py
