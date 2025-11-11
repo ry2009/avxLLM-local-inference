@@ -95,3 +95,45 @@ def test_runtime_generates_and_emits_metrics(monkeypatch, enable_profiling):
         assert "ttft_s" in iter_entry and iter_entry["ttft_s"] >= 0
     else:
         assert metrics["avg_ttft_s"] is None
+
+
+def test_runtime_respects_num_threads(monkeypatch):
+    monkeypatch.setattr(runtime_mod, "AutoTokenizer", _FakeAutoTokenizer)
+    monkeypatch.setattr(runtime_mod, "AutoModelForCausalLM", _FakeAutoModel)
+
+    captured = {}
+
+    def fake_set_num_threads(value: int) -> None:
+        captured["value"] = value
+
+    monkeypatch.setattr(runtime_mod.torch, "set_num_threads", fake_set_num_threads)
+
+    runtime = runtime_mod.CpuPeftRuntime(
+        base_model_id="dummy",
+        adapter_map={},
+        torch_dtype=torch.float32,
+        num_threads=6,
+    )
+    assert runtime.num_threads == 6
+    assert captured["value"] == 6
+
+
+def test_runtime_env_threads(monkeypatch):
+    monkeypatch.setattr(runtime_mod, "AutoTokenizer", _FakeAutoTokenizer)
+    monkeypatch.setattr(runtime_mod, "AutoModelForCausalLM", _FakeAutoModel)
+    monkeypatch.setenv("INFENG_NUM_THREADS", "4")
+
+    captured = {}
+
+    def fake_set_num_threads(value: int) -> None:
+        captured["value"] = value
+
+    monkeypatch.setattr(runtime_mod.torch, "set_num_threads", fake_set_num_threads)
+
+    runtime = runtime_mod.CpuPeftRuntime(
+        base_model_id="dummy",
+        adapter_map={},
+        torch_dtype=torch.float32,
+    )
+    assert runtime.num_threads == 4
+    assert captured["value"] == 4

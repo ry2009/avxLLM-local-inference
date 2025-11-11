@@ -25,6 +25,7 @@ run_local_eval = _load_script("run_local_eval")
 run_end_to_end = _load_script("run_end_to_end")
 run_telemetry_matrix = _load_script("run_telemetry_matrix")
 run_ci_smoke = _load_script("run_ci_smoke")
+run_throughput_sweep = _load_script("run_throughput_sweep")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
@@ -184,6 +185,27 @@ def test_run_ci_smoke(monkeypatch, tmp_path, capsys):
     assert exit_code == 0
     payload = json.loads((tmp_path / "metrics.json").read_text())
     assert "metrics" in payload
+
+
+def test_run_throughput_sweep(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(run_throughput_sweep, "snapshot_download", lambda **kwargs: tmp_path)
+    monkeypatch.setattr(run_throughput_sweep, "CpuPeftRuntime", _FakeRuntime)
+
+    exit_code = run_throughput_sweep.main(
+        [
+            "--model-id",
+            "foo/base",
+            "--model-dir",
+            str(tmp_path / "model"),
+            "--lengths",
+            "8",
+            "--out",
+            str(tmp_path / "sweep.json"),
+        ]
+    )
+    assert exit_code == 0
+    data = json.loads((tmp_path / "sweep.json").read_text())
+    assert data[0]["length"] == 8
 
 
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):

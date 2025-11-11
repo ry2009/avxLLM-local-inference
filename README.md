@@ -44,6 +44,7 @@ python tools/download_assets.py \
   --adapter-id theone049/agriqa-tinyllama-lora-adapter --adapter-dir adapters/agriqa
 ```
 Prefer a single command? `scripts/run_local_inference.py` will download `sshleifer/tiny-gpt2`, load an optional adapter, and emit telemetry in one go.
+To pin CPU threads for max throughput, set `INFENG_NUM_THREADS=<logical cores>` before running the scripts (or pass `num_threads` to `CpuPeftRuntime`).
 
 ### 2. Native Engine Build (C++ kernels)
 ```bash
@@ -69,6 +70,7 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/download_manifest.py` — downloads every model/adapter listed in `configs/sample_assets.json` (handy before demos or CI runs).
 - `scripts/run_telemetry_matrix.py` — iterates over multiple adapters, runs a shared prompt list, and writes aggregated TPS/TTFT metrics to `reports/telemetry_matrix.json`.
 - `scripts/run_ci_smoke.py` — single-command smoke test (download, generate one prompt, emit metrics) for CI or sanity checks.
+- `scripts/run_throughput_sweep.py` — sweeps prompt lengths (and optional adapters) to output `reports/throughput_sweep.json` for throughput regressions.
 - `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features
@@ -86,6 +88,8 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 Read `docs/engine_vision.md` and `docs/engine_roadmap.md` for the full breakdown of milestones, risks, and mitigation plans.
 
 For a telemetry deep dive (TPS, TTPS, TTFT, Rust↔C++ hand-off), see `docs/perf_metrics.md`.
+For tuning tips and benchmarking flows, see `docs/throughput_playbook.md`.
+For the hands-on lab walkthrough, see `docs/lab_review_checklist.md`.
 For macOS-specific toolchain notes (Homebrew, LLVM, Python/Rust steps), see `docs/mac_setup.md`.
 For a scripted end-to-end walkthrough, see `docs/quickstart_pipeline.md`.
 
@@ -99,7 +103,7 @@ For a scripted end-to-end walkthrough, see `docs/quickstart_pipeline.md`.
 - `make setup` — create a virtualenv and install Python deps in editable mode.
 - `make cpp-build` / `make cpp-test` — configure + build the native engine and run Catch2/GTest suites.
 - `make py-test` — execute the Python runtime/tests (including the new telemetry/download coverage).
-- `make run-infer`, `make run-train`, `make run-pretrain`, `make run-eval`, `make run-pipeline`, `make run-telemetry`, `make run-manifest`, `make run-ci-smoke` — invoke the helper scripts described above.
+- `make run-infer`, `make run-train`, `make run-pretrain`, `make run-eval`, `make run-pipeline`, `make run-telemetry`, `make run-throughput`, `make run-manifest`, `make run-ci-smoke` — invoke the helper scripts described above.
 - `make check-mac` — run the environment health check (`scripts/check_mac_env.py`).
 
 ## Contributing

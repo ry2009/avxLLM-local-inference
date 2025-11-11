@@ -49,6 +49,7 @@ ctest --test-dir build --output-on-failure
 - `scripts/download_manifest.py` — prefetch the assets listed in `configs/sample_assets.json` so demos work offline.
 - `scripts/run_telemetry_matrix.py` — iterate through multiple adapters and export TPS/TTFT aggregates.
 - `scripts/run_ci_smoke.py` — quick sanity check that downloads a model and emits telemetry JSON.
+- `scripts/run_throughput_sweep.py` — sweep prompt lengths/adapters to generate throughput snapshots.
 
 ## 6. Makefile shortcuts
 ```bash
@@ -61,7 +62,11 @@ make run-pipeline # end-to-end download/train/eval loop
 make run-telemetry# gather TPS/TTFT matrix across adapters
 make run-manifest # download the sample asset manifest
 make run-ci-smoke # quick single-prompt telemetry sanity check
+
+make run-throughput # prompt-length sweep to monitor TPS
 make check-mac    # run scripts/check_mac_env.py to confirm toolchain availability
 ```
 
 Export `HF_TOKEN` (or use the `--token` flag) if your Hugging Face repos require authentication.
+Set `INFENG_NUM_THREADS=<logical cores>` before running inference scripts to
+pin PyTorch thread pools for maximum throughput on macOS.

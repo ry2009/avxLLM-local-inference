@@ -45,6 +45,9 @@ run-pipeline:
 run-telemetry:
 	. $(VENV)/bin/activate && python scripts/run_telemetry_matrix.py --adapter demo=theone049/agriqa-tinyllama-lora-adapter --prompts data/math_prompts.jsonl
 
+run-throughput:
+	. $(VENV)/bin/activate && python scripts/run_throughput_sweep.py --lengths 32,64,128 --adapter demo=theone049/agriqa-tinyllama-lora-adapter --prompts data/math_prompts.jsonl
+
 run-ci-smoke:
 	. $(VENV)/bin/activate && python scripts/run_ci_smoke.py
 

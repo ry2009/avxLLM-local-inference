@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+import os
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
@@ -67,6 +68,7 @@ class CpuPeftRuntime:
         adapter_map: Dict[str, str],
         torch_dtype: torch.dtype = torch.float32,
         use_fast_tokenizer: bool = True,
+        num_threads: Optional[int] = None,
     ) -> None:
         """
         Parameters
@@ -91,6 +93,18 @@ class CpuPeftRuntime:
         if self.tokenizer.pad_token_id is None:
             # Ensure padding token exists for batch inference
             self.tokenizer.pad_token = self.tokenizer.eos_token
+
+        thread_override = num_threads
+        if thread_override is None:
+            env_threads = os.environ.get("INFENG_NUM_THREADS")
+            if env_threads:
+                try:
+                    thread_override = int(env_threads)
+                except ValueError:
+                    raise ValueError("INFENG_NUM_THREADS must be an integer") from None
+        if thread_override is not None:
+            torch.set_num_threads(thread_override)
+        self._num_threads = thread_override
 
         model = AutoModelForCausalLM.from_pretrained(
             base_model_id,
@@ -286,6 +300,10 @@ class CpuPeftRuntime:
         self._profiling_enabled = enabled
         if not enabled:
             self._last_profile = None
+
+    @property
+    def num_threads(self) -> Optional[int]:
+        return self._num_threads
 
     def get_last_profile(self) -> Optional[List[Dict[str, float]]]:
         return self._last_profile
