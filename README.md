@@ -80,6 +80,7 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/run_llama_compare.py` — compares CpuPeftRuntime vs llama.cpp python on the same prompts to quantify wins.
 - `scripts/run_rl_eval.py` — compute reward deltas (base vs adapter) using any reward function.
 - `scripts/generate_perf_dashboard.py` — builds Plotly HTML from the perf CSV/JSON artifacts.
+- `scripts/summarize_tokenizer_perf.py` — pulls the best Rust tokenizer tokens/s from `reports/tokenizer.csv`.
 - `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features
@@ -100,6 +101,7 @@ For a telemetry deep dive (TPS, TTPS, TTFT, Rust↔C++ hand-off), see `docs/perf
 For tuning tips and benchmarking flows, see `docs/throughput_playbook.md`.
 For pre/post training playbooks, check `docs/prepost_playbook.md`.
 For the hands-on lab walkthrough, see `docs/lab_review_checklist.md`.
+For Rust tokenizer details + benchmarks, see `docs/rust_speedups.md`.
 For macOS-specific toolchain notes (Homebrew, LLVM, Python/Rust steps), see `docs/mac_setup.md`.
 For a scripted end-to-end walkthrough, see `docs/quickstart_pipeline.md`.
 

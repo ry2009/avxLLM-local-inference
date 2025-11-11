@@ -32,6 +32,7 @@ run_rl_demo = _load_script("run_rl_demo")
 run_llama_compare = _load_script("run_llama_compare")
 run_rl_eval = _load_script("run_rl_eval")
 generate_perf_dashboard = _load_script("generate_perf_dashboard")
+summarize_tokenizer_perf = _load_script("summarize_tokenizer_perf")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
@@ -425,3 +426,13 @@ def test_generate_perf_dashboard(monkeypatch, tmp_path):
     monkeypatch.chdir(Path(__file__).resolve().parents[3])
     exit_code = generate_perf_dashboard.main(["--output", str(tmp_path / "dash.html")])
     assert exit_code == 0
+    assert (tmp_path / "dash.html").exists()
+
+
+def test_summarize_tokenizer_perf(tmp_path, capsys, monkeypatch):
+    csv = tmp_path / "tokenizer.csv"
+    csv.write_text("bench,threads,tokens_per_s\ntokenizer,1,1000\ntokenizer,2,2000\n")
+    exit_code = summarize_tokenizer_perf.main(["--csv", str(csv)])
+    assert exit_code == 0
+    out = capsys.readouterr().out.strip()
+    assert "best_threads" in out
