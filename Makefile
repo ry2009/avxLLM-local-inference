@@ -42,5 +42,8 @@ run-eval:
 run-pipeline:
 	. $(VENV)/bin/activate && python scripts/run_end_to_end.py --telemetry
 
+run-manifest:
+	. $(VENV)/bin/activate && python scripts/download_manifest.py configs/sample_assets.json
+
 check-mac:
 	python scripts/check_mac_env.py

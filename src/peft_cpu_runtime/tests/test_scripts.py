@@ -23,6 +23,7 @@ def _load_script(filename: str):
 run_local_inference = _load_script("run_local_inference")
 run_local_eval = _load_script("run_local_eval")
 run_end_to_end = _load_script("run_end_to_end")
+download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
 
@@ -115,6 +116,29 @@ def test_check_mac_env_json(monkeypatch, capsys):
     assert exit_code == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["cmake"]["available"] is True
+
+
+def test_download_manifest(monkeypatch, tmp_path, capsys):
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({
+        "models": [{"id": "foo/base", "dir": str(tmp_path / "model")}] ,
+        "adapters": [{"id": "foo/adapter", "dir": str(tmp_path / "adapter")}] ,
+    }))
+
+    calls = []
+
+    def fake_download(*, repo_id, local_dir, local_dir_use_symlinks, revision, token, resume_download):
+        calls.append(repo_id)
+        Path(local_dir).mkdir(parents=True, exist_ok=True)
+        return local_dir
+
+    monkeypatch.setattr(download_manifest, "snapshot_download", fake_download)
+
+    exit_code = download_manifest.main([str(manifest)])
+    assert exit_code == 0
+    result = json.loads(capsys.readouterr().out)
+    assert {entry["id"] for entry in result} == {"foo/base", "foo/adapter"}
+    assert calls == ["foo/base", "foo/adapter"]
 
 
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):

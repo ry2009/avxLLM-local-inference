@@ -1,0 +1,14 @@
+{
+  "models": [
+    {
+      "id": "sshleifer/tiny-gpt2",
+      "dir": "models/tiny-gpt2"
+    }
+  ],
+  "adapters": [
+    {
+      "id": "theone049/agriqa-tinyllama-lora-adapter",
+      "dir": "adapters/agriqa"
+    }
+  ]
+}
