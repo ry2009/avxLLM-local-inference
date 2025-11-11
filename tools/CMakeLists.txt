@@ -1,0 +1,6 @@
+if (INFENG_ENABLE_BENCHMARKS)
+  add_subdirectory(bench)
+endif()
+add_subdirectory(convert)
+add_subdirectory(eval)
+add_subdirectory(perf/cpp)

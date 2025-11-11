@@ -1,0 +1,25 @@
+{
+  "base_model": "EleutherAI/pythia-410m",
+  "adapter_name": "mcq-distill",
+  "adapter_path": "adapters/mcq-distill/mcq-distill",
+  "prompts_file": "projects/bon_emergence/tasks/mcq.jsonl",
+  "answer_field": "answer",
+  "k_values": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "samples_per_prompt": 6,
+  "max_new_tokens": 12,
+  "temperature": 0.1,
+  "top_p": 0.8,
+  "dtype": "float16",
+  "scorer": "mc",
+  "output_dir": "reports/bon_runs_mcq_adapter",
+  "metadata": {
+    "experiment": "bon-mcq-adapter"
+  }
+}

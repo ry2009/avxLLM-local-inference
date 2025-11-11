@@ -1,0 +1,12 @@
+{
+  "base": {
+    "avg_latency_s": 1.172613158730868,
+    "avg_entropy": 1.791759469222055,
+    "avg_unique_frac": 1.0
+  },
+  "adapter": {
+    "avg_latency_s": 0.9837242533152069,
+    "avg_entropy": 0.2405199814493883,
+    "avg_unique_frac": 0.24999999999999994
+  }
+}

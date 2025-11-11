@@ -1,0 +1,45 @@
+[
+  {
+    "prompt": "Write a Python function `is_even(n)` that returns True if n is even.",
+    "tests": [
+      [
+        2,
+        true
+      ],
+      [
+        3,
+        false
+      ]
+    ]
+  },
+  {
+    "prompt": "Write a Python function `factorial(n)` that returns n!.",
+    "tests": [
+      [
+        3,
+        6
+      ],
+      [
+        5,
+        120
+      ]
+    ]
+  },
+  {
+    "prompt": "Write a Python function `fizzbuzz(n)` that returns \"FizzBuzz\" rules for n.",
+    "tests": [
+      [
+        3,
+        "Fizz"
+      ],
+      [
+        5,
+        "Buzz"
+      ],
+      [
+        15,
+        "FizzBuzz"
+      ]
+    ]
+  }
+]

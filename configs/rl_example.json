@@ -1,0 +1,19 @@
+{
+  "base_model": "EleutherAI/pythia-70m-deduped",
+  "adapter_name": "demo-rl",
+  "output_dir": "adapters/demo-rl",
+  "dataset": {
+    "path": "data/math_prompts.jsonl",
+    "field": "prompt"
+  },
+  "reward": "examples/rewards/exact_match.py:compute_reward",
+  "max_new_tokens": 32,
+  "epochs": 1,
+  "batch_size": 1,
+  "mini_batch_size": 1,
+  "kl_coef": 0.0,
+  "model_dtype": "float16",
+  "optimizer": {
+    "lr": 1e-5
+  }
+}

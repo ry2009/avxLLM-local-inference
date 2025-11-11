@@ -1,0 +1,6 @@
+add_executable(infeng_perf_attn_decode attn_decode_runner.cc)
+target_link_libraries(infeng_perf_attn_decode PRIVATE infeng_core)
+
+add_executable(infeng_perf_sched_zipf sched_zipf_runner.cc ../sched_zipf_sim.cc)
+target_include_directories(infeng_perf_sched_zipf PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(infeng_perf_sched_zipf PRIVATE infeng_core)

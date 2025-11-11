@@ -1,0 +1,27 @@
+{
+  "base_model": "EleutherAI/pythia-160m",
+  "adapter_name": "math-distill",
+  "output_dir": "adapters/math-distill",
+  "prompts": [],
+  "dataset": {
+    "path": "data/distill_math.jsonl",
+    "field": "text",
+    "shuffle": false
+  },
+  "epochs": 5,
+  "batch_size": 1,
+  "max_seq_len": 128,
+  "model_dtype": "float16",
+  "optimizer": {
+    "lr": 0.0005,
+    "weight_decay": 0.0
+  },
+  "lora": {
+    "r": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": [
+      "query_key_value"
+    ]
+  }
+}

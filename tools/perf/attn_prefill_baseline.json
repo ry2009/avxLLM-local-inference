@@ -1,0 +1,17 @@
+{
+  "seq32_dim128": {
+    "tokens_per_s": 340585.0
+  },
+  "seq64_dim128": {
+    "tokens_per_s": 421280.0
+  },
+  "seq128_dim128": {
+    "tokens_per_s": 442755.0
+  },
+  "_meta": {
+    "hardware": "x86_64",
+    "processor": "i386",
+    "cores": 16,
+    "timestamp": "2025-10-23T06:42:04Z"
+  }
+}

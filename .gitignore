@@ -1,0 +1,57 @@
+# Build artifacts
+/build/
+/cmake-build*/
+CMakeCache.txt
+CMakeFiles/
+Testing/
+compile_commands.json
+*.dSYM
+*.ipch
+*.pdb
+*.obj
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+tmp_*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.whl
+*.egg-info/
+dist/
+build/lib/
+pip-wheel-metadata/
+.python-version
+.venv/
+venv/
+env/
+.env
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.coverage
+coverage.xml
+htmlcov/
+.cache/
+.ipynb_checkpoints/
+
+# Tooling & editor files
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Local data & checkpoints (retain placeholder READMEs)
+models/*
+!models/README.md
+checkpoints/*
+!checkpoints/README.md
+adapters/*
+!adapters/README.md

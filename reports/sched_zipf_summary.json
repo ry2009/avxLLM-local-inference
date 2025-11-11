@@ -1,0 +1,15 @@
+{
+  "load_50.0068": {
+    "p50_ms": 4.61854,
+    "p95_ms": 5.5692,
+    "base_p95_ms": 4.69031,
+    "lora_tax_pct": 18.7384,
+    "hot_reload_ms_p95": 50.0326,
+    "tokens_per_s": 6414.84,
+    "queue_ms_p95": 0.0597791,
+    "load_rps": 50.0068,
+    "decode_util": 0.00164482,
+    "adapter_util": 0.220418,
+    "overlap_ratio": 0.000372309
+  }
+}

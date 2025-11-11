@@ -1,0 +1,8 @@
+if (INFENG_ENABLE_PYTHON)
+    find_package(pybind11 QUIET CONFIG)
+    if (pybind11_FOUND)
+        add_subdirectory(python)
+    else ()
+        message(WARNING "pybind11 not found; skipping Python API")
+    endif ()
+endif ()

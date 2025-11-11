@@ -1,0 +1,24 @@
+{
+  "base_model": "EleutherAI/pythia-160m",
+  "prompts_file": "projects/bon_emergence/tasks/reasoning.jsonl",
+  "answer_field": "answer",
+  "k_values": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "samples_per_prompt": 32,
+  "max_new_tokens": 64,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "dtype": "float16",
+  "scorer": "exact",
+  "output_dir": "reports/bon_runs_reasoning",
+  "metadata": {
+    "experiment": "bon-reasoning",
+    "notes": "BoN sweep for reasoning tasks"
+  }
+}

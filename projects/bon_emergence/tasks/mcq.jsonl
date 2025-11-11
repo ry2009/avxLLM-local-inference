@@ -1,0 +1,10 @@
+{"prompt": "Question: 2 + 2 = ?\nOptions:\n(A) 3\n(B) 4\n(C) 5\nAnswer:", "answer": "B", "scorer": "mc"}
+{"prompt": "Question: What is the capital of Germany?\nOptions:\n(A) Berlin\n(B) Munich\n(C) Hamburg\nAnswer:", "answer": "A", "scorer": "mc"}
+{"prompt": "Question: Which planet is known as the Red Planet?\nOptions:\n(A) Venus\n(B) Mars\n(C) Jupiter\nAnswer:", "answer": "B", "scorer": "mc"}
+{"prompt": "Question: 9 * 7 = ?\nOptions:\n(A) 56\n(B) 63\n(C) 72\nAnswer:", "answer": "B", "scorer": "mc"}
+{"prompt": "Question: Who wrote '1984'?\nOptions:\n(A) George Orwell\n(B) Aldous Huxley\n(C) Ray Bradbury\nAnswer:", "answer": "A", "scorer": "mc"}
+{"prompt": "Question: Water's chemical formula is?\nOptions:\n(A) H2O\n(B) CO2\n(C) O2\nAnswer:", "answer": "A", "scorer": "mc"}
+{"prompt": "Question: 15 divided by 5 equals?\nOptions:\n(A) 2\n(B) 3\n(C) 5\nAnswer:", "answer": "B", "scorer": "mc"}
+{"prompt": "Question: Largest mammal?\nOptions:\n(A) Elephant\n(B) Blue Whale\n(C) Giraffe\nAnswer:", "answer": "B", "scorer": "mc"}
+{"prompt": "Question: Which language is primarily spoken in Brazil?\nOptions:\n(A) Spanish\n(B) Portuguese\n(C) French\nAnswer:", "answer": "B", "scorer": "mc"}
+{"prompt": "Question: What is 12 - 5?\nOptions:\n(A) 6\n(B) 7\n(C) 8\nAnswer:", "answer": "B", "scorer": "mc"}

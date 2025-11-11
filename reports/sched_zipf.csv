@@ -1,0 +1,2 @@
+sched,alpha,adapters_N,mean_adapters_per_req,rank,load_rps,duration_s,decode_threads,adapter_threads,pin_cores,p50_ms,p95_ms,base_p95_ms,lora_tax_pct,hot_reload_ms_p95,tokens_per_s,queue_ms_p95,decode_util,adapter_util,overlap_ratio
+scheduler_zipf,1.1,512,1.5,32,50.0068,29.9959,4,4,0,4.61854,5.5692,4.69031,18.7384,50.0326,6414.84,0.0597791,0.00164482,0.220418,0.000372309

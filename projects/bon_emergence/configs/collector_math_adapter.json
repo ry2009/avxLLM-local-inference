@@ -1,0 +1,22 @@
+{
+  "base_model": "EleutherAI/pythia-160m",
+  "adapter_name": "math-distill",
+  "adapter_path": "adapters/math-distill/math-distill",
+  "prompts_file": "projects/bon_emergence/tasks/math.jsonl",
+  "answer_field": "answer",
+  "k_values": [
+    1,
+    3
+  ],
+  "samples_per_prompt": 3,
+  "max_new_tokens": 8,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "do_sample": false,
+  "dtype": "float16",
+  "scorer": "numeric",
+  "output_dir": "reports/bon_runs_math_adapter",
+  "metadata": {
+    "experiment": "bon-math-adapter"
+  }
+}

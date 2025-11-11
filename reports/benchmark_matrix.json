@@ -1,0 +1,173 @@
+{
+  "generated_at": "2025-10-22T06:19:44.917065+00:00",
+  "config": "configs/benchmark_sample.json",
+  "runs": [
+    {
+      "name": "torch_tiny_gpt2",
+      "command": [
+        "/Users/ryanmathieu/inf-eng/.venv/bin/python",
+        "/Users/ryanmathieu/inf-eng/scripts/benchmark.py",
+        "--engine",
+        "torch",
+        "--base-model",
+        "sshleifer/tiny-gpt2",
+        "--num-requests",
+        "4",
+        "--zipf-alpha",
+        "1.0",
+        "--seed",
+        "123",
+        "--max-new-tokens",
+        "8",
+        "--iters",
+        "1",
+        "--warmup",
+        "0",
+        "--include-base",
+        "--prompt",
+        "Summarize a fictional quarterly report in two sentences.",
+        "--prompt",
+        "List three risks of CPU-bound LoRA serving.",
+        "--prompt",
+        "Explain Zipf-distributed adapter traffic in one paragraph.",
+        "--metrics-out",
+        "/var/folders/cc/9pmtsq0n3gn_jk7hlllhmsmh0000gn/T/tmpoaael1sk.json"
+      ],
+      "elapsed_s": 5.160233706003055,
+      "returncode": 0,
+      "stdout": "{\n  \"avg_latency_s\": 1.0183613050030544,\n  \"seq_per_second\": 3.9278790153834473,\n  \"tokens_per_second\": 31.42303212306758,\n  \"total_new_tokens\": 32,\n  \"iterations\": [\n    {\n      \"latency_s\": 1.0183613050030544,\n      \"sequences\": 4,\n      \"new_tokens\": 32,\n      \"tokens_per_second\": 31.42303212306758,\n      \"seq_per_second\": 3.9278790153834473\n    }\n  ]\n}\n",
+      "stderr": "/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.\n  warnings.warn(\nSetting `pad_token_id` to `eos_token_id`:None for open-end generation.\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\nSetting `pad_token_id` to `eos_token_id`:None for open-end generation.\nSetting `pad_token_id` to `eos_token_id`:None for open-end generation.\nSetting `pad_token_id` to `eos_token_id`:None for open-end generation.\n",
+      "metrics": {
+        "avg_latency_s": 1.0183613050030544,
+        "seq_per_second": 3.9278790153834473,
+        "tokens_per_second": 31.42303212306758,
+        "total_new_tokens": 32,
+        "iterations": [
+          {
+            "latency_s": 1.0183613050030544,
+            "sequences": 4,
+            "new_tokens": 32,
+            "tokens_per_second": 31.42303212306758,
+            "seq_per_second": 3.9278790153834473
+          }
+        ]
+      },
+      "engine": "torch",
+      "base_model": "sshleifer/tiny-gpt2"
+    },
+    {
+      "name": "torch_tinyllama_lora",
+      "command": [
+        "/Users/ryanmathieu/inf-eng/.venv/bin/python",
+        "/Users/ryanmathieu/inf-eng/scripts/benchmark.py",
+        "--engine",
+        "torch",
+        "--base-model",
+        "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "--num-requests",
+        "4",
+        "--zipf-alpha",
+        "1.0",
+        "--seed",
+        "123",
+        "--max-new-tokens",
+        "8",
+        "--iters",
+        "1",
+        "--warmup",
+        "0",
+        "--tokenize-overlap-workers",
+        "2",
+        "--include-base",
+        "--adapter",
+        "therapy=usmanalam82/tinyllama-therapy-lora",
+        "--adapter",
+        "story=dasrupdip04/lora-finetuned-TinyLLama",
+        "--prompt",
+        "Provide a calming response to a stressful workplace scenario.",
+        "--prompt",
+        "Write a 3-sentence imaginative story about a data pipeline learning to self-heal.",
+        "--prompt",
+        "Draft a customer support reply for an AI inference latency incident.",
+        "--metrics-out",
+        "/var/folders/cc/9pmtsq0n3gn_jk7hlllhmsmh0000gn/T/tmpqg7kpu7_.json"
+      ],
+      "elapsed_s": 20.68068599599792,
+      "returncode": 0,
+      "stdout": "{\n  \"avg_latency_s\": 8.160720957999729,\n  \"seq_per_second\": 0.49015277211248237,\n  \"tokens_per_second\": 0.9803055442249647,\n  \"total_new_tokens\": 8,\n  \"iterations\": [\n    {\n      \"latency_s\": 8.160720957999729,\n      \"sequences\": 4,\n      \"new_tokens\": 8,\n      \"tokens_per_second\": 0.9803055442249647,\n      \"seq_per_second\": 0.49015277211248237\n    }\n  ]\n}\n",
+      "stderr": "/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.\n  warnings.warn(\nStarting from v4.46, the `logits` model output will have the same type as the model (except at train time, where it will always be FP32)\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:601: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\n/Users/ryanmathieu/inf-eng/.venv/lib/python3.12/site-packages/transformers/generation/configuration_utils.py:606: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`. This was detected when initializing the generation config instance, which means the corresponding file may hold incorrect parameterization and should be fixed.\n  warnings.warn(\n",
+      "metrics": {
+        "avg_latency_s": 8.160720957999729,
+        "seq_per_second": 0.49015277211248237,
+        "tokens_per_second": 0.9803055442249647,
+        "total_new_tokens": 8,
+        "iterations": [
+          {
+            "latency_s": 8.160720957999729,
+            "sequences": 4,
+            "new_tokens": 8,
+            "tokens_per_second": 0.9803055442249647,
+            "seq_per_second": 0.49015277211248237
+          }
+        ]
+      },
+      "engine": "torch",
+      "base_model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+    },
+    {
+      "name": "llama_cpp_tinyllama_lora",
+      "command": [
+        "/Users/ryanmathieu/inf-eng/.venv/bin/python",
+        "/Users/ryanmathieu/inf-eng/scripts/benchmark.py",
+        "--engine",
+        "llama_cpp",
+        "--base-model",
+        "models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+        "--num-requests",
+        "4",
+        "--zipf-alpha",
+        "1.0",
+        "--seed",
+        "123",
+        "--max-new-tokens",
+        "8",
+        "--iters",
+        "1",
+        "--warmup",
+        "0",
+        "--include-base",
+        "--n-ctx",
+        "4096",
+        "--n-threads",
+        "8",
+        "--adapter",
+        "fncall=adapters/gguf/tinyllama-function-call-lora-adapter-250424-f16.gguf",
+        "--prompt",
+        "Summarize a ticket requesting function-call support for a TinyLlama agent.",
+        "--prompt",
+        "List two arguments for adding structured output capabilities to an AI assistant.",
+        "--prompt",
+        "Suggest improvements to an AI-driven runbook execution flow.",
+        "--metrics-out",
+        "/var/folders/cc/9pmtsq0n3gn_jk7hlllhmsmh0000gn/T/tmp18yah_cv.json"
+      ],
+      "elapsed_s": 3.8415374329997576,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/ryanmathieu/inf-eng/scripts/benchmark.py\", line 190, in <module>\n    main()\n  File \"/Users/ryanmathieu/inf-eng/scripts/benchmark.py\", line 126, in main\n    runtime = LlamaCppPeftRuntime(\n              ^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ryanmathieu/inf-eng/src/peft_cpu_runtime/quantized.py\", line 47, in __init__\n    self._load_adapters(adapter_map)\n  File \"/Users/ryanmathieu/inf-eng/src/peft_cpu_runtime/quantized.py\", line 53, in _load_adapters\n    handle = llama_cpp.llama_adapter_lora_init(self._llm.model, path.encode(\"utf-8\"))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: module 'llama_cpp.llama_cpp' has no attribute 'llama_adapter_lora_init'\n",
+      "error": "Command failed with exit code 1"
+    }
+  ],
+  "summary": [
+    {
+      "name": "torch_tiny_gpt2",
+      "engine": "torch",
+      "tokens_per_second": 31.42303212306758
+    },
+    {
+      "name": "torch_tinyllama_lora",
+      "engine": "torch",
+      "tokens_per_second": 0.9803055442249647
+    }
+  ]
+}

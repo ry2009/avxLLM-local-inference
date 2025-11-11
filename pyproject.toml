@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "peft-cpu-runtime"
+version = "0.1.0"
+description = "CPU-first PEFT inference toolkit"
+authors = [{ name = "Ryan" }]
+requires-python = ">=3.10"
+dependencies = [
+    "torch",
+    "transformers",
+    "peft",
+    "datasets",
+    "huggingface-hub",
+]
+
+[project.scripts]
+peft-cpu-run = "peft_cpu_runtime.cli:main"
+

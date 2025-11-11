@@ -1,0 +1,19 @@
+{
+  "base_model": "EleutherAI/pythia-70m-deduped",
+  "adapter_name": "demo-distill",
+  "adapter_path": "adapters/demo-distill/demo-distill",
+  "prompts_file": "projects/bon_emergence/prompts.jsonl",
+  "answer_field": "answer",
+  "k_values": [4, 8, 16],
+  "samples_per_prompt": 8,
+  "max_new_tokens": 12,
+  "temperature": 0.1,
+  "top_p": 0.9,
+  "dtype": "float16",
+  "scorer": "exact",
+  "output_dir": "reports/bon_runs",
+  "metadata": {
+    "experiment": "demo",
+    "notes": "first local BoN sweep"
+  }
+}

@@ -1,0 +1,3 @@
+name,engine,base_model,tokens_per_second,seq_per_second,avg_latency_s
+torch_tiny_gpt2,torch,sshleifer/tiny-gpt2,31.42303212306758,3.9278790153834473,1.0183613050030544
+torch_tinyllama_lora,torch,TinyLlama/TinyLlama-1.1B-Chat-v1.0,0.9803055442249647,0.49015277211248237,8.160720957999729

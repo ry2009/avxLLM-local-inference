@@ -1,0 +1,233 @@
+{
+  "seq1024_dim64_h32_b1": {
+    "tokens_per_s": 13866800.0,
+    "scratch_ratio": 0.53125,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.265625
+  },
+  "seq1024_dim64_h32_b4": {
+    "tokens_per_s": 13926500.0,
+    "scratch_ratio": 0.2125,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0664062
+  },
+  "seq1024_dim64_h32_b8": {
+    "tokens_per_s": 13794800.0,
+    "scratch_ratio": 0.118056,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0332031
+  },
+  "seq2048_dim64_h32_b1": {
+    "tokens_per_s": 13893000.0,
+    "scratch_ratio": 0.6875,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.257812
+  },
+  "seq2048_dim64_h32_b4": {
+    "tokens_per_s": 13779800.0,
+    "scratch_ratio": 0.34375,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0644531
+  },
+  "seq2048_dim64_h32_b8": {
+    "tokens_per_s": 13918300.0,
+    "scratch_ratio": 0.20625,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0322266
+  },
+  "seq4096_dim64_h32_b1": {
+    "tokens_per_s": 13845900.0,
+    "scratch_ratio": 0.8125,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.253906
+  },
+  "seq4096_dim64_h32_b4": {
+    "tokens_per_s": 13891800.0,
+    "scratch_ratio": 0.507812,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0634766
+  },
+  "seq4096_dim64_h32_b8": {
+    "tokens_per_s": 13882800.0,
+    "scratch_ratio": 0.338542,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0317383
+  },
+  "seq1024_dim128_h32_b1": {
+    "tokens_per_s": 9595610.0,
+    "scratch_ratio": 0.375,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.28125
+  },
+  "seq1024_dim128_h32_b4": {
+    "tokens_per_s": 9588320.0,
+    "scratch_ratio": 0.125,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0703125
+  },
+  "seq1024_dim128_h32_b8": {
+    "tokens_per_s": 9380540.0,
+    "scratch_ratio": 0.0661765,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0351562
+  },
+  "seq2048_dim128_h32_b1": {
+    "tokens_per_s": 9578550.0,
+    "scratch_ratio": 0.53125,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.265625
+  },
+  "seq2048_dim128_h32_b4": {
+    "tokens_per_s": 9622710.0,
+    "scratch_ratio": 0.2125,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0664062
+  },
+  "seq2048_dim128_h32_b8": {
+    "tokens_per_s": 9562490.0,
+    "scratch_ratio": 0.118056,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0332031
+  },
+  "seq4096_dim128_h32_b1": {
+    "tokens_per_s": 9555250.0,
+    "scratch_ratio": 0.6875,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.257812
+  },
+  "seq4096_dim128_h32_b4": {
+    "tokens_per_s": 9535760.0,
+    "scratch_ratio": 0.34375,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0644531
+  },
+  "seq4096_dim128_h32_b8": {
+    "tokens_per_s": 9558920.0,
+    "scratch_ratio": 0.20625,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0322266
+  },
+  "seq1024_dim64_h64_b1": {
+    "tokens_per_s": 13940200.0,
+    "scratch_ratio": 0.354167,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.132812
+  },
+  "seq1024_dim64_h64_b4": {
+    "tokens_per_s": 13862400.0,
+    "scratch_ratio": 0.118056,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0332031
+  },
+  "seq1024_dim64_h64_b8": {
+    "tokens_per_s": 13868500.0,
+    "scratch_ratio": 0.0625,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0166016
+  },
+  "seq2048_dim64_h64_b1": {
+    "tokens_per_s": 13900400.0,
+    "scratch_ratio": 0.515625,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.128906
+  },
+  "seq2048_dim64_h64_b4": {
+    "tokens_per_s": 13851100.0,
+    "scratch_ratio": 0.20625,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0322266
+  },
+  "seq2048_dim64_h64_b8": {
+    "tokens_per_s": 13871700.0,
+    "scratch_ratio": 0.114583,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0161133
+  },
+  "seq4096_dim64_h64_b1": {
+    "tokens_per_s": 13814400.0,
+    "scratch_ratio": 0.677083,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.126953
+  },
+  "seq4096_dim64_h64_b4": {
+    "tokens_per_s": 13876500.0,
+    "scratch_ratio": 0.338542,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0317383
+  },
+  "seq4096_dim64_h64_b8": {
+    "tokens_per_s": 13854200.0,
+    "scratch_ratio": 0.203125,
+    "tile_tokens": 256.0,
+    "l2_bytes_per_token": 0.0158691
+  },
+  "seq1024_dim128_h64_b1": {
+    "tokens_per_s": 9600330.0,
+    "scratch_ratio": 0.225,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.140625
+  },
+  "seq1024_dim128_h64_b4": {
+    "tokens_per_s": 9616310.0,
+    "scratch_ratio": 0.0661765,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0351562
+  },
+  "seq1024_dim128_h64_b8": {
+    "tokens_per_s": 9502650.0,
+    "scratch_ratio": 0.0340909,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0175781
+  },
+  "seq2048_dim128_h64_b1": {
+    "tokens_per_s": 9594350.0,
+    "scratch_ratio": 0.354167,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.132812
+  },
+  "seq2048_dim128_h64_b4": {
+    "tokens_per_s": 9528310.0,
+    "scratch_ratio": 0.118056,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0332031
+  },
+  "seq2048_dim128_h64_b8": {
+    "tokens_per_s": 9460460.0,
+    "scratch_ratio": 0.0625,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0166016
+  },
+  "seq4096_dim128_h64_b1": {
+    "tokens_per_s": 9658220.0,
+    "scratch_ratio": 0.515625,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.128906
+  },
+  "seq4096_dim128_h64_b4": {
+    "tokens_per_s": 9573340.0,
+    "scratch_ratio": 0.20625,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0322266
+  },
+  "seq4096_dim128_h64_b8": {
+    "tokens_per_s": 9542270.0,
+    "scratch_ratio": 0.114583,
+    "tile_tokens": 128.0,
+    "l2_bytes_per_token": 0.0161133
+  },
+  "_meta": {
+    "hardware": "x86_64",
+    "processor": "i386",
+    "cores": 16,
+    "cpu_mhz": 0.0,
+    "ram_gb": 16.0,
+    "flags": [
+      "x86_64"
+    ],
+    "timestamp": "2025-10-23T19:00:02Z",
+    "tile_tokens": {
+      "dim64": 256.0,
+      "dim128": 128.0
+    }
+  }
+}

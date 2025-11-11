@@ -1,0 +1,241 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  linux:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        simd: [avx2, avx512]
+    env:
+      CC: clang-17
+      CXX: clang++-17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-17 llvm-17 lld-17 cargo python3 python3-pip python3-dev pybind11-dev ninja-build
+
+      - name: Configure
+        run: |
+          SIMD_OPTS="-DINFENG_AVX2=OFF -DINFENG_AVX512=OFF -DINFENG_AMX=OFF"
+          if [ "${{ matrix.simd }}" = "avx2" ]; then
+            SIMD_OPTS="-DINFENG_AVX2=ON -DINFENG_AVX512=OFF -DINFENG_AMX=OFF"
+          else
+            SIMD_OPTS="-DINFENG_AVX2=ON -DINFENG_AVX512=ON -DINFENG_AMX=OFF"
+          fi
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/clang17.cmake \
+            ${SIMD_OPTS} \
+            -DINFENG_ENABLE_PYTHON=ON
+
+      - name: Build
+        run: cmake --build build --config Release -j2
+
+      - name: Unit tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Bench smoke
+        run: ./build/tools/bench/infeng_bench_stub
+
+  tokenizer-perf:
+    runs-on: ubuntu-22.04
+    needs: linux
+    env:
+      CC: clang-17
+      CXX: clang++-17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-17 llvm-17 lld-17 cargo python3 python3-pip pybind11-dev ninja-build
+          python3 -m pip install --user tokenizers==0.19.1
+
+      - name: Prepare NumPy environment
+        run: |
+          python3 -m venv .venv || true
+          source .venv/bin/activate && python -m pip install -U pip "numpy==2.0.2" safetensors || true
+          source .venv/bin/activate && python tools/py/check_numpy.py || true
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/clang17.cmake \
+            -DINFENG_AVX2=ON -DINFENG_AVX512=OFF -DINFENG_AMX=OFF \
+            -DINFENG_ENABLE_PYTHON=OFF
+
+      - name: Build
+        run: cmake --build build --config Release -j2
+
+      - name: Run tokenizer perf
+        run: TOKENIZER_MIN_SPEEDUP=5.0 tools/perf/run_tokenizer_perf.sh tests/data/test_tokenizer.json tools/bench/prompts.txt
+
+      - name: Upload tokenizer artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tokenizer-perf
+          path: |
+            reports/tokenizer.csv
+            reports/tokenizer_py.csv
+            reports/tokenizer_summary.json
+
+  gemm-perf:
+    runs-on: ubuntu-22.04
+    needs: linux
+    env:
+      CC: clang-17
+      CXX: clang++-17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-17 llvm-17 lld-17 cargo python3 python3-pip ninja-build
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/clang17.cmake \
+            -DINFENG_AVX2=ON -DINFENG_AVX512=OFF -DINFENG_AMX=OFF \
+            -DINFENG_ENABLE_PYTHON=OFF
+
+      - name: Build
+        run: cmake --build build --config Release -j2
+
+      - name: Run GEMM perf
+        run: tools/perf/run_gemm_perf.sh
+
+      - name: Upload GEMM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemm-perf
+          path: |
+            reports/gemm_lora.csv
+            reports/gemm_summary.json
+
+  attn-prefill-perf:
+    runs-on: ubuntu-22.04
+    needs: linux
+    env:
+      CC: clang-17
+      CXX: clang++-17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-17 llvm-17 lld-17 cargo python3 python3-pip ninja-build
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/clang17.cmake \
+            -DINFENG_AVX2=ON -DINFENG_AVX512=OFF -DINFENG_AMX=OFF \
+            -DINFENG_ENABLE_PYTHON=OFF
+
+      - name: Build
+        run: cmake --build build --config Release -j2
+
+      - name: Run attention prefill perf
+        run: tools/perf/run_attn_perf.sh
+
+      - name: Upload attention artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: attn-prefill-perf
+          path: |
+            reports/attn_prefill.csv
+            reports/attn_prefill_summary.json
+
+  attn-decode-perf:
+    name: attn-decode-perf
+    runs-on: ubuntu-22.04
+    needs: linux
+    env:
+      CC: clang-17
+      CXX: clang++-17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-17 llvm-17 lld-17 cargo python3 python3-pip ninja-build
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/clang17.cmake \
+            -DINFENG_AVX2=ON -DINFENG_AVX512=OFF -DINFENG_AMX=OFF \
+            -DINFENG_ENABLE_PYTHON=OFF
+
+      - name: Build
+        run: cmake --build build --config Release -j2
+
+      - name: Run attention decode perf
+        run: tools/perf/run_attn_decode.sh
+
+      - name: Upload attention decode artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: attn-decode-perf
+          path: |
+            reports/attn_decode.csv
+            reports/attn_decode_summary.json
+
+  scheduler-zipf-perf:
+    runs-on: ubuntu-22.04
+    needs: linux
+    env:
+      CC: clang-17
+      CXX: clang++-17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-17 llvm-17 lld-17 cargo python3 python3-pip ninja-build
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/clang17.cmake \
+            -DINFENG_AVX2=ON -DINFENG_AVX512=OFF -DINFENG_AMX=OFF \
+            -DINFENG_ENABLE_PYTHON=OFF
+
+      - name: Build
+        run: cmake --build build --config Release -j2
+
+      - name: Run scheduler Zipf bench
+        run: tools/perf/run_sched_zipf.sh
+
+      - name: Upload scheduler artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: scheduler-zipf-perf
+          path: |
+            reports/sched_zipf.csv
+            reports/sched_zipf_summary.json

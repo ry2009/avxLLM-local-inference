@@ -1,0 +1,20 @@
+{
+  "seq32_dim128": {
+    "tokens_per_s": 340013.0,
+    "speedup": 1.83651,
+    "l2_diff": 0.245065,
+    "perplexity_delta": 0.0
+  },
+  "seq64_dim128": {
+    "tokens_per_s": 436559.0,
+    "speedup": 2.30951,
+    "l2_diff": 0.346711,
+    "perplexity_delta": 0.0
+  },
+  "seq128_dim128": {
+    "tokens_per_s": 455915.0,
+    "speedup": 2.49643,
+    "l2_diff": 0.482932,
+    "perplexity_delta": 0.0
+  }
+}

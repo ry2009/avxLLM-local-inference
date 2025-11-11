@@ -1,0 +1,15 @@
+{
+  "base_model": "hf-internal-testing/tiny-random-LlamaForCausalLM",
+  "output_dir": "checkpoints/tiny-pretrain",
+  "dataset": {
+    "path": "data/wiki_subset.jsonl",
+    "field": "text"
+  },
+  "epochs": 1,
+  "batch_size": 2,
+  "max_seq_len": 256,
+  "model_dtype": "bfloat16",
+  "optimizer": {
+    "lr": 3e-5
+  }
+}

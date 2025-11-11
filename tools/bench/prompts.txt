@@ -1,0 +1,6 @@
+Explain the benefits of CPU-first inference engines in two sentences.
+List five use cases for LoRA adapters in enterprise AI.
+Summarize the latest benchmark results for TinyLlama models.
+Describe a debugging workflow for fused GEMM kernels.
+What are the trade-offs between FP8 and INT8 quantization for attention?
+Generate a concise plan for overlapping LoRA computations with base model decode.

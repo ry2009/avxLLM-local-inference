@@ -1,0 +1,54 @@
+{
+  "global": {
+    "zipf_alpha": 1.0,
+    "seed": 123,
+    "num_requests": 4,
+    "max_new_tokens": 8,
+    "iters": 1,
+    "warmup": 0,
+    "include_base": true
+  },
+  "runs": [
+    {
+      "name": "torch_tiny_gpt2",
+      "engine": "torch",
+      "base_model": "sshleifer/tiny-gpt2",
+      "adapters": [],
+      "prompts": [
+        "Summarize a fictional quarterly report in two sentences.",
+        "List three risks of CPU-bound LoRA serving.",
+        "Explain Zipf-distributed adapter traffic in one paragraph."
+      ]
+    },
+    {
+      "name": "torch_tinyllama_lora",
+      "engine": "torch",
+      "base_model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "adapters": [
+        "therapy=usmanalam82/tinyllama-therapy-lora",
+        "story=dasrupdip04/lora-finetuned-TinyLLama"
+      ],
+      "tokenize_overlap_workers": 2,
+      "prompts": [
+        "Provide a calming response to a stressful workplace scenario.",
+        "Write a 3-sentence imaginative story about a data pipeline learning to self-heal.",
+        "Draft a customer support reply for an AI inference latency incident."
+      ]
+    },
+    {
+      "name": "llama_cpp_tinyllama_lora",
+      "engine": "llama_cpp",
+      "base_model": "models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+      "adapters": [
+        "fncall=adapters/gguf/tinyllama-function-call-lora-adapter-250424-f16.gguf"
+      ],
+      "prompts": [
+        "Summarize a ticket requesting function-call support for a TinyLlama agent.",
+        "List two arguments for adding structured output capabilities to an AI assistant.",
+        "Suggest improvements to an AI-driven runbook execution flow."
+      ],
+      "n_threads": 8,
+      "n_ctx": 4096
+    }
+  ]
+}

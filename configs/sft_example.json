@@ -1,0 +1,27 @@
+{
+  "base_model": "EleutherAI/pythia-70m-deduped",
+  "adapter_name": "demo-distill",
+  "output_dir": "adapters/demo-distill",
+  "prompts": [],
+  "dataset": {
+    "path": "data/distill_pairs.jsonl",
+    "field": "text",
+    "shuffle": false
+  },
+  "epochs": 5,
+  "batch_size": 1,
+  "max_seq_len": 128,
+  "model_dtype": "float16",
+  "optimizer": {
+    "lr": 0.001,
+    "weight_decay": 0.0
+  },
+  "lora": {
+    "r": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": [
+      "query_key_value"
+    ]
+  }
+}

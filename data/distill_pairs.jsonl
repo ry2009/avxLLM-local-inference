@@ -1,0 +1,10 @@
+{"prompt": "2+2=", "completion": "4", "text": "2+2= 4"}
+{"prompt": "3*3=", "completion": "9", "text": "3*3= 9"}
+{"prompt": "5-2=", "completion": "3", "text": "5-2= 3"}
+{"prompt": "Square root of 16 is", "completion": "4", "text": "Square root of 16 is 4"}
+{"prompt": "The capital of France is", "completion": "Paris", "text": "The capital of France is Paris"}
+{"prompt": "The capital of Japan is", "completion": "Tokyo", "text": "The capital of Japan is Tokyo"}
+{"prompt": "The chemical symbol for water is", "completion": "H2O", "text": "The chemical symbol for water is H2O"}
+{"prompt": "What is the next number in the sequence 2, 4, 6, ?", "completion": "8", "text": "What is the next number in the sequence 2, 4, 6, ? 8"}
+{"prompt": "What color do you get by mixing red and blue?", "completion": "Purple", "text": "What color do you get by mixing red and blue? Purple"}
+{"prompt": "Translate to English: 'Bonjour'", "completion": "Hello", "text": "Translate to English: 'Bonjour' Hello"}

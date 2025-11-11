@@ -1,0 +1,6 @@
+hello cpu world
+emoji 😊
+你好 世界
+multi   space
+tabs\tline\tbreak
+ローマル

@@ -1,0 +1,16 @@
+{
+  "num_prompts": 40,
+  "pass_at": {
+    "32": 1.0,
+    "4": 1.0,
+    "16": 1.0,
+    "8": 1.0,
+    "2": 1.0,
+    "1": 1.0
+  },
+  "unique_frac": 0.0625,
+  "entropy": 0.0,
+  "avg_duration_s": 0.05,
+  "avg_chars_per_sec": 198.0,
+  "coverage": 1.0
+}

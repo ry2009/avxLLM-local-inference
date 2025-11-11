@@ -1,0 +1,10 @@
+{"prompt": "2+2=", "answer": "4"}
+{"prompt": "3*3=", "answer": "9"}
+{"prompt": "5-2=", "answer": "3"}
+{"prompt": "Square root of 16 is", "answer": "4"}
+{"prompt": "The capital of France is", "answer": "Paris"}
+{"prompt": "The capital of Japan is", "answer": "Tokyo"}
+{"prompt": "The chemical symbol for water is", "answer": "H2O"}
+{"prompt": "What is the next number in the sequence 2, 4, 6, ?", "answer": "8"}
+{"prompt": "What color do you get by mixing red and blue?", "answer": "Purple"}
+{"prompt": "Translate to English: 'Bonjour'", "answer": "Hello"}

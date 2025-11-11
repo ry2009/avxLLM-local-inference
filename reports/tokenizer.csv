@@ -1,0 +1,5 @@
+bench,threads,tokens_per_s
+tokenizer,1,27544.6
+tokenizer,2,28765.4
+tokenizer,4,28673.5
+tokenizer,8,26042.8

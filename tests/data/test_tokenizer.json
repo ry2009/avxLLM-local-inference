@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "truncation": null,
+  "padding": null,
+  "added_tokens": [],
+  "normalizer": {
+    "type": "NFC"
+  },
+  "pre_tokenizer": {
+    "type": "Whitespace"
+  },
+  "post_processor": null,
+  "decoder": null,
+  "model": {
+    "type": "WordLevel",
+    "vocab": {
+      "[UNK]": 0,
+      "hello": 1,
+      "cpu": 2,
+      "world": 3,
+      "emoji": 4,
+      "😊": 5,
+      "你好": 6,
+      "世界": 7,
+      "multi": 8,
+      "space": 9,
+      "tabs": 10,
+      "line": 11,
+      "break": 12,
+      "ロ": 13,
+      "ー": 14,
+      "マ": 15,
+      "ル": 16,
+      "ローマル": 17
+    },
+    "unk_token": "[UNK]"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "rank8_batch1": {
+    "tokens_per_s": 50668.3
+  },
+  "rank8_batch4": {
+    "tokens_per_s": 160136.0
+  },
+  "rank8_batch8": {
+    "tokens_per_s": 471903.0
+  },
+  "rank16_batch1": {
+    "tokens_per_s": 50529.0
+  },
+  "rank16_batch4": {
+    "tokens_per_s": 158004.0
+  },
+  "rank16_batch8": {
+    "tokens_per_s": 473217.0
+  },
+  "rank32_batch1": {
+    "tokens_per_s": 50406.7
+  },
+  "rank32_batch4": {
+    "tokens_per_s": 160995.0
+  },
+  "rank32_batch8": {
+    "tokens_per_s": 470057.0
+  },
+  "rank64_batch1": {
+    "tokens_per_s": 49984.6
+  },
+  "rank64_batch4": {
+    "tokens_per_s": 156183.0
+  },
+  "rank64_batch8": {
+    "tokens_per_s": 460530.0
+  },
+  "_meta": {
+    "hardware": "x86_64",
+    "processor": "i386",
+    "cores": 16,
+    "cpu_mhz": 0.0,
+    "ram_gb": 16.0,
+    "flags": [
+      "x86_64"
+    ],
+    "timestamp": "2025-10-29T07:28:30Z"
+  }
+}
