@@ -6,7 +6,7 @@ import argparse
 import json
 import os
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 from huggingface_hub import snapshot_download
 
@@ -27,7 +27,7 @@ def _download(repo_id: str, target: Path, token: Optional[str], revision: Option
     return Path(path)
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run local CPU inference with optional LoRA adapters.")
     parser.add_argument("--model-id", default="sshleifer/tiny-gpt2", help="HF repo id for the base model")
     parser.add_argument("--model-dir", default="models/quickstart-base", help="Cache directory for the base model")
@@ -44,11 +44,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--telemetry", action="store_true", help="Emit TPS/TTPS/TTFT via runtime profiling")
     parser.add_argument("--benchmark-iters", type=int, default=1, help="Number of iterations for benchmark output")
     parser.add_argument("--benchmark-warmup", type=int, default=0)
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main() -> int:
-    args = parse_args()
+def main(argv: Optional[List[str]] = None) -> int:
+    args = parse_args(argv)
     token = args.token or os.environ.get("HF_TOKEN") or os.environ.get("HUGGINGFACE_HUB_TOKEN")
 
     model_path = _download(args.model_id, Path(args.model_dir), token, args.revision)

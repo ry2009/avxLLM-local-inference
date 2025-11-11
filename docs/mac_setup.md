@@ -44,6 +44,7 @@ ctest --test-dir build --output-on-failure
   runs inference with full telemetry.
 - `scripts/run_local_training.py` — fine-tunes a LoRA adapter on `data/distill_math.jsonl` samples.
 - `scripts/run_local_pretrain.py` — builds a tiny causal LM checkpoint from `data/wiki_subset.jsonl`.
+- `scripts/run_local_eval.py` — feeds `data/math_prompts.jsonl` through the runtime and saves telemetry.
 
 ## 6. Makefile shortcuts
 ```bash
@@ -51,6 +52,8 @@ make setup        # create venv + install deps
 make cpp-build    # configure + build native engine
 make test         # run Catch2 + pytest suites
 make run-infer    # execute the inference helper script with telemetry enabled
+make run-eval     # run the dataset-driven eval script + telemetry export
+make check-mac    # run scripts/check_mac_env.py to confirm toolchain availability
 ```
 
 Export `HF_TOKEN` (or use the `--token` flag) if your Hugging Face repos require authentication.

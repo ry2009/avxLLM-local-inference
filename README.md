@@ -64,6 +64,8 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/run_local_inference.py` — downloads `sshleifer/tiny-gpt2` (or the model you choose), runs prompts via `CpuPeftRuntime`, and prints TPS/TTFT metrics.
 - `scripts/run_local_training.py` — fine-tunes a tiny LoRA adapter on `data/distill_math.jsonl`; outputs land in `adapters/quickstart-trained`.
 - `scripts/run_local_pretrain.py` — pre-trains a miniature causal LM checkpoint on `data/wiki_subset.jsonl` and writes it to `checkpoints/tiny-pretrain-cpu`.
+- `scripts/run_local_eval.py` — runs a prompt set (default `data/math_prompts.jsonl`) end-to-end and saves telemetry to `reports/local_eval_metrics.json`.
+- `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features
 - Batched inference via `RequestBatch` objects with shared `InferenceTraceConfig` (temperature, top-p, stop sequences, etc.).
@@ -92,7 +94,8 @@ For macOS-specific toolchain notes (Homebrew, LLVM, Python/Rust steps), see `doc
 - `make setup` — create a virtualenv and install Python deps in editable mode.
 - `make cpp-build` / `make cpp-test` — configure + build the native engine and run Catch2/GTest suites.
 - `make py-test` — execute the Python runtime/tests (including the new telemetry/download coverage).
-- `make run-infer`, `make run-train`, `make run-pretrain` — invoke the helper scripts described above.
+- `make run-infer`, `make run-train`, `make run-pretrain`, `make run-eval` — invoke the helper scripts described above.
+- `make check-mac` — run the environment health check (`scripts/check_mac_env.py`).
 
 ## Contributing
 - Follow the onboarding notes in `docs/ONBOARDING.md` for environment setup and coding standards.

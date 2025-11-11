@@ -35,3 +35,9 @@ run-train:
 
 run-pretrain:
 	. $(VENV)/bin/activate && python scripts/run_local_pretrain.py
+
+run-eval:
+	. $(VENV)/bin/activate && python scripts/run_local_eval.py --telemetry
+
+check-mac:
+	python scripts/check_mac_env.py
