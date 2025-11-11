@@ -43,6 +43,7 @@ python tools/download_assets.py \
   --model-id TinyLlama/TinyLlama-1.1B-Chat-v1.0 --model-dir models/tinyllama-chat \
   --adapter-id theone049/agriqa-tinyllama-lora-adapter --adapter-dir adapters/agriqa
 ```
+Prefer a single command? `scripts/run_local_inference.py` will download `sshleifer/tiny-gpt2`, load an optional adapter, and emit telemetry in one go.
 
 ### 2. Native Engine Build (C++ kernels)
 ```bash
@@ -59,6 +60,10 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `tools/perf` — wrappers for `perf stat`, VTune, and CSV exports consumed by the `reports/` dashboards.
 - `reports/benchmark_usage.md` shows how nightly perf gates are configured.
 
+### 4. Plug-and-Play Scripts
+- `scripts/run_local_inference.py` — downloads `sshleifer/tiny-gpt2` (or the model you choose), runs prompts via `CpuPeftRuntime`, and prints TPS/TTFT metrics.
+- `scripts/run_local_training.py` — fine-tunes a tiny LoRA adapter on `data/distill_math.jsonl`; outputs land in `adapters/quickstart-trained`.
+
 ## Runtime Features
 - Batched inference via `RequestBatch` objects with shared `InferenceTraceConfig` (temperature, top-p, stop sequences, etc.).
 - Adapter-aware scheduling that groups prompts per adapter, activates LoRA weights on demand, and overlaps tokenization with generation using thread pools.
@@ -74,6 +79,7 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 Read `docs/engine_vision.md` and `docs/engine_roadmap.md` for the full breakdown of milestones, risks, and mitigation plans.
 
 For a telemetry deep dive (TPS, TTPS, TTFT, Rust↔C++ hand-off), see `docs/perf_metrics.md`.
+For macOS-specific toolchain notes (Homebrew, LLVM, Python/Rust steps), see `docs/mac_setup.md`.
 
 ## Development Workflow
 1. Prototype in Python (`peft_cpu_runtime`) to validate scheduler or telemetry ideas.
