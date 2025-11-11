@@ -51,6 +51,15 @@ run-throughput:
 run-ci-smoke:
 	. $(VENV)/bin/activate && python scripts/run_ci_smoke.py
 
+run-rl-demo:
+	. $(VENV)/bin/activate && python scripts/run_rl_demo.py
+
+run-rl-eval:
+	. $(VENV)/bin/activate && python scripts/run_rl_eval.py --model-id checkpoints/tiny-pretrain-cpu --adapter adapters/rl-tiny
+
+run-perf-dashboard:
+	. $(VENV)/bin/activate && python scripts/generate_perf_dashboard.py
+
 run-manifest:
 	. $(VENV)/bin/activate && python scripts/download_manifest.py configs/sample_assets.json
 

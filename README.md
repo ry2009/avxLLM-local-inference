@@ -78,6 +78,8 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/run_prompt_benchmark.py` — measures per-prompt TPS/TTFT and writes CSV/JSON summaries for deep dives.
 - `scripts/run_rl_demo.py` — runs the CPU-only RL demo in `configs/rl_tiny.json` and emits a tiny adapter.
 - `scripts/run_llama_compare.py` — compares CpuPeftRuntime vs llama.cpp python on the same prompts to quantify wins.
+- `scripts/run_rl_eval.py` — compute reward deltas (base vs adapter) using any reward function.
+- `scripts/generate_perf_dashboard.py` — builds Plotly HTML from the perf CSV/JSON artifacts.
 - `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features
@@ -111,7 +113,7 @@ For a scripted end-to-end walkthrough, see `docs/quickstart_pipeline.md`.
 - `make setup` — create a virtualenv and install Python deps in editable mode.
 - `make cpp-build` / `make cpp-test` — configure + build the native engine and run Catch2/GTest suites.
 - `make py-test` — execute the Python runtime/tests (including the new telemetry/download coverage).
-- `make run-infer`, `make run-train`, `make run-pretrain`, `make run-eval`, `make run-pipeline`, `make run-telemetry`, `make run-throughput`, `make run-manifest`, `make run-ci-smoke` — invoke the helper scripts described above.
+- `make run-infer`, `make run-train`, `make run-pretrain`, `make run-eval`, `make run-pipeline`, `make run-telemetry`, `make run-throughput`, `make run-manifest`, `make run-ci-smoke`, `make run-rl-demo`, `make run-rl-eval`, `make run-perf-dashboard` — invoke the helper scripts described above.
 - `make check-mac` — run the environment health check (`scripts/check_mac_env.py`).
 
 ## Contributing

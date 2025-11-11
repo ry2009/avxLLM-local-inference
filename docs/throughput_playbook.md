@@ -29,6 +29,8 @@ Steps to maximize local CPU inference performance on Mac/AVX hosts.
 4. **Compare changes**
    - Keep `reports/telemetry_matrix.json` and `reports/throughput_sweep.json`
      under version control (or linked in PRs) to prove throughput gains.
+   - Generate `reports/perf_dashboard.html` via `scripts/generate_perf_dashboard.py`
+     for interactive plots.
 
 5. **Advanced**
    - Use `INFENG_NUM_THREADS` + `taskset`/`caffeinate` to pin the runtime to

@@ -31,6 +31,8 @@ engine. Everything below runs on a single macOS workstation.
    - `reports/local_eval_metrics.json`
    - `reports/perf_report.md`
    - RL adapter from `scripts/run_rl_demo.py` (shows post-training manipulations).
+   - Reward comparison JSON from `scripts/run_rl_eval.py`.
+   - Plotly dashboard from `scripts/generate_perf_dashboard.py`.
 
 6. **Optional**
    - `make run-eval` for deterministic JSON prompt files.

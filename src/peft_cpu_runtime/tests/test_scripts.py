@@ -30,12 +30,14 @@ run_blend_adapters = _load_script("blend_lora_adapters")
 run_prompt_benchmark = _load_script("run_prompt_benchmark")
 run_rl_demo = _load_script("run_rl_demo")
 run_llama_compare = _load_script("run_llama_compare")
+run_rl_eval = _load_script("run_rl_eval")
+generate_perf_dashboard = _load_script("generate_perf_dashboard")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
 
 class _FakeRuntime:
-    def __init__(self, base_model_id, adapter_map, torch_dtype, **kwargs):
+    def __init__(self, base_model_id, adapter_map, torch_dtype=None, **kwargs):
         self.base_model_id = base_model_id
         self.adapter_map = adapter_map
         self.telemetry = False
@@ -383,3 +385,43 @@ def test_run_llama_compare(monkeypatch, tmp_path, capsys):
     )
     assert exit_code == 0
     assert fake_llama_calls["prompt"] == "hi"
+
+
+def test_rl_eval(monkeypatch, tmp_path):
+    prompts = tmp_path / "prompts.jsonl"
+    prompts.write_text('{"prompt": "hi"}\n')
+
+    class _EvalRuntime(_FakeRuntime):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.outputs = {
+                None: ["base"],
+                "adapter": ["adapter"],
+            }
+
+        def generate(self, batch):
+            adapter = batch.requests[0].adapter_name
+            return self.outputs[adapter]
+
+    monkeypatch.setattr(run_rl_eval, "CpuPeftRuntime", _EvalRuntime)
+    monkeypatch.setattr(run_rl_eval, "get_reward", lambda name: lambda prompts, outputs, _: [1.0])
+
+    exit_code = run_rl_eval.main(
+        [
+            "--model-id",
+            "dummy",
+            "--adapter",
+            "adapter",
+            "--prompts",
+            str(prompts),
+        ]
+    )
+    assert exit_code == 0
+    assert Path("reports/rl_eval.json").exists()
+
+
+def test_generate_perf_dashboard(monkeypatch, tmp_path):
+    (tmp_path / "reports").mkdir(parents=True, exist_ok=True)
+    monkeypatch.chdir(Path(__file__).resolve().parents[3])
+    exit_code = generate_perf_dashboard.main(["--output", str(tmp_path / "dash.html")])
+    assert exit_code == 0
