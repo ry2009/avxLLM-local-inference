@@ -1,7 +1,14 @@
 from __future__ import annotations
 
+from pathlib import Path
+import sys
+
 import torch
 import pytest
+
+SYS_SRC_ROOT = Path(__file__).resolve().parents[2]
+if str(SYS_SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SYS_SRC_ROOT))
 
 from peft_cpu_runtime import runtime as runtime_mod
 

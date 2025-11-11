@@ -43,5 +43,14 @@ ctest --test-dir build --output-on-failure
 - `scripts/run_local_inference.py` — downloads `sshleifer/tiny-gpt2` and optional adapters, then
   runs inference with full telemetry.
 - `scripts/run_local_training.py` — fine-tunes a LoRA adapter on `data/distill_math.jsonl` samples.
+- `scripts/run_local_pretrain.py` — builds a tiny causal LM checkpoint from `data/wiki_subset.jsonl`.
+
+## 6. Makefile shortcuts
+```bash
+make setup        # create venv + install deps
+make cpp-build    # configure + build native engine
+make test         # run Catch2 + pytest suites
+make run-infer    # execute the inference helper script with telemetry enabled
+```
 
 Export `HF_TOKEN` (or use the `--token` flag) if your Hugging Face repos require authentication.

@@ -7,14 +7,44 @@ SYS_SRC_ROOT = Path(__file__).resolve().parents[2]
 if str(SYS_SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SYS_SRC_ROOT))
 
+import types
+
 import pytest
 import torch
 from peft_cpu_runtime.training import TrainingConfig, train_lora_adapter
 from peft_cpu_runtime.training.rewards import get_reward
+from peft_cpu_runtime.training import sft as sft_module
 
 
-@pytest.mark.skipif(torch.cuda.is_available(), reason="skip on CUDA hosts to keep runtime low")
-def test_train_lora_adapter(tmp_path: Path) -> None:
+class _DummyTokenizer:
+    def __call__(self, texts, max_length, padding, truncation, return_tensors):
+        size = len(texts)
+        input_ids = torch.zeros((size, max_length), dtype=torch.long)
+        attention = torch.ones_like(input_ids)
+        return {"input_ids": input_ids, "attention_mask": attention}
+
+    def save_pretrained(self, path: Path) -> None:
+        path.mkdir(parents=True, exist_ok=True)
+        (path / "tokenizer.json").write_text("{}")
+
+
+class _DummyModel(torch.nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.param = torch.nn.Parameter(torch.zeros(1))
+
+    def save_pretrained(self, path: Path) -> None:
+        path.mkdir(parents=True, exist_ok=True)
+        (path / "adapter_model.safetensors").write_text("stub")
+
+    def forward(self, input_ids, attention_mask, labels):
+        return types.SimpleNamespace(loss=self.param.sum())
+
+
+def test_train_lora_adapter(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(sft_module, "prepare_tokenizer", lambda *args, **kwargs: _DummyTokenizer())
+    monkeypatch.setattr(sft_module, "prepare_lora_model", lambda **kwargs: _DummyModel())
+
     prompts = ["Hello", "World"]
     cfg = TrainingConfig(
         base_model="sshleifer/tiny-gpt2",
@@ -33,4 +63,3 @@ def test_builtin_reward_registry() -> None:
     scores = reward(["hello"], ["short completion"], None)
     assert len(scores) == 1
     assert scores[0] > 0.0
-
