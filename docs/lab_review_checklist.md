@@ -30,6 +30,7 @@ engine. Everything below runs on a single macOS workstation.
    - `reports/telemetry_matrix.json`
    - `reports/local_eval_metrics.json`
    - `reports/perf_report.md`
+   - RL adapter from `scripts/run_rl_demo.py` (shows post-training manipulations).
 
 6. **Optional**
    - `make run-eval` for deterministic JSON prompt files.

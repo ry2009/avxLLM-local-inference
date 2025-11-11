@@ -24,3 +24,18 @@
   to capture before/after metrics whenever you touch kernels or adapters.
 - Store `reports/ci_smoke_metrics.json`, `reports/throughput_sweep.json`, and
   `reports/perf_report.md` as attachments when syncing with labs.
+## RL / reward tuning (CPU-scale)
+1. Prepare a prompt dataset (JSONL with `prompt` field).
+2. Create an RL config referencing a reward callable (see
+   `src/peft_cpu_runtime/training/rl.py`).
+3. Run `python scripts/run_rl_demo.py --config configs/rl_tiny.json` (or call
+   `python -m peft_cpu_runtime.cli rl --config ...`) to do PPO-style updates
+   entirely on CPU.
+4. Evaluate with `scripts/run_prompt_benchmark.py` or `run_local_eval.py` and
+   compare reward scores vs the base model.
+
+## SFT vs RL vs hybrid
+- Use `run_local_training.py` (SFT) for quick wins.
+- Use RL mode for preference optimization; both consume the same dataset helpers.
+- Blend adapters or mix RL/SFT weights using `scripts/blend_lora_adapters.py` to
+  approximate larger GPU workflows on CPU.

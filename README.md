@@ -76,6 +76,8 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/run_throughput_sweep.py` — sweeps prompt lengths (and optional adapters) to output `reports/throughput_sweep.json` for throughput regressions.
 - `scripts/blend_lora_adapters.py` — linearly combines two LoRA adapters into a new one for quick hybrid experiments.
 - `scripts/run_prompt_benchmark.py` — measures per-prompt TPS/TTFT and writes CSV/JSON summaries for deep dives.
+- `scripts/run_rl_demo.py` — runs the CPU-only RL demo in `configs/rl_tiny.json` and emits a tiny adapter.
+- `scripts/run_llama_compare.py` — compares CpuPeftRuntime vs llama.cpp python on the same prompts to quantify wins.
 - `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features

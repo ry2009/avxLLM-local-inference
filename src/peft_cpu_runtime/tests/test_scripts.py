@@ -28,7 +28,8 @@ run_ci_smoke = _load_script("run_ci_smoke")
 run_throughput_sweep = _load_script("run_throughput_sweep")
 run_blend_adapters = _load_script("blend_lora_adapters")
 run_prompt_benchmark = _load_script("run_prompt_benchmark")
-run_throughput_sweep = _load_script("run_throughput_sweep")
+run_rl_demo = _load_script("run_rl_demo")
+run_llama_compare = _load_script("run_llama_compare")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
@@ -284,6 +285,37 @@ def test_prompt_benchmark(monkeypatch, tmp_path, capsys):
     assert (tmp_path / "bench.csv").exists()
 
 
+def test_rl_demo(monkeypatch, tmp_path):
+    prompts = tmp_path / "prompts.jsonl"
+    prompts.write_text('{"prompt": "hello"}\n{"prompt": "world"}\n')
+    cfg_path = tmp_path / "rl.json"
+    cfg_path.write_text(
+        json.dumps(
+                {
+                    "base_model": "dummy",
+                    "adapter_name": "demo",
+                    "output_dir": str(tmp_path / "out"),
+                    "dataset": {"path": str(prompts), "field": "prompt"},
+                    "reward": "exact_match",
+                "max_new_tokens": 8,
+                "epochs": 1,
+                "batch_size": 1,
+                "mini_batch_size": 1,
+            }
+        )
+    )
+
+    captured = {}
+
+    def fake_train(prompts_list, cfg):
+        captured["prompts"] = prompts_list
+        return tmp_path / "out"
+
+    monkeypatch.setattr(run_rl_demo, "train_policy_rl", fake_train)
+
+    exit_code = run_rl_demo.main(["--config", str(cfg_path), "--limit", "1"])
+    assert exit_code == 0
+    assert captured["prompts"] == ["hello"]
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):
     dataset = tmp_path / "train.jsonl"
     dataset.write_text('{"text": "prompt"}\n')
@@ -318,3 +350,36 @@ def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):
     stdout = capsys.readouterr().out.strip()
     payload = json.loads(stdout)
     assert payload["prompts"] == ["Eval"]
+
+
+def test_run_llama_compare(monkeypatch, tmp_path, capsys):
+    prompts = tmp_path / "prompts.jsonl"
+    prompts.write_text('{"prompt": "hi"}\n')
+    fake_llama_calls = {}
+
+    class _FakeLlama:
+        def __init__(self, *_, **__):
+            pass
+
+        def __call__(self, prompt, max_tokens, temperature, top_p):
+            fake_llama_calls["prompt"] = prompt
+            return {"choices": [{"text": "response"}]}
+
+    monkeypatch.setattr(run_llama_compare, "snapshot_download", lambda **kwargs: tmp_path)
+    monkeypatch.setattr(run_llama_compare, "CpuPeftRuntime", _FakeRuntime)
+    monkeypatch.setattr(run_llama_compare, "Llama", _FakeLlama)
+
+    exit_code = run_llama_compare.main(
+        [
+            "--model-id",
+            "dummy",
+            "--llama-model",
+            str(tmp_path / "model.gguf"),
+            "--prompts",
+            str(prompts),
+            "--limit",
+            "1",
+        ]
+    )
+    assert exit_code == 0
+    assert fake_llama_calls["prompt"] == "hi"

@@ -35,3 +35,5 @@ Steps to maximize local CPU inference performance on Mac/AVX hosts.
      performance cores only.
    - Combine `scripts/run_throughput_sweep.py` with different `--adapter`
      settings to evaluate adapter fusion overheads.
+   - `python scripts/run_llama_compare.py --model-id ... --llama-model path.gguf`
+     → quick apples-to-apples tokens/sec comparison vs llama.cpp.

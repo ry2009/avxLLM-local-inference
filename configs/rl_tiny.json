@@ -1,0 +1,21 @@
+{
+  "base_model": "sshleifer/tiny-gpt2",
+  "adapter_name": "rl-tiny",
+  "output_dir": "adapters/rl-tiny",
+  "dataset": {
+    "path": "data/math_prompts.jsonl",
+    "field": "prompt",
+    "max_samples": 8,
+    "shuffle": false
+  },
+  "reward": "exact_match",
+  "max_new_tokens": 32,
+  "epochs": 1,
+  "batch_size": 1,
+  "mini_batch_size": 1,
+  "kl_coef": 0.0,
+  "model_dtype": "float32",
+  "optimizer": {
+    "lr": 5e-5
+  }
+}
