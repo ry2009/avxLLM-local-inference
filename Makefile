@@ -42,6 +42,9 @@ run-eval:
 run-pipeline:
 	. $(VENV)/bin/activate && python scripts/run_end_to_end.py --telemetry
 
+run-telemetry:
+	. $(VENV)/bin/activate && python scripts/run_telemetry_matrix.py --adapter demo=theone049/agriqa-tinyllama-lora-adapter --prompts data/math_prompts.jsonl
+
 run-manifest:
 	. $(VENV)/bin/activate && python scripts/download_manifest.py configs/sample_assets.json
 

@@ -23,6 +23,7 @@ def _load_script(filename: str):
 run_local_inference = _load_script("run_local_inference")
 run_local_eval = _load_script("run_local_eval")
 run_end_to_end = _load_script("run_end_to_end")
+run_telemetry_matrix = _load_script("run_telemetry_matrix")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
@@ -139,6 +140,32 @@ def test_download_manifest(monkeypatch, tmp_path, capsys):
     result = json.loads(capsys.readouterr().out)
     assert {entry["id"] for entry in result} == {"foo/base", "foo/adapter"}
     assert calls == ["foo/base", "foo/adapter"]
+
+
+def test_run_telemetry_matrix(monkeypatch, tmp_path, capsys):
+    prompts_file = tmp_path / "prompts.txt"
+    prompts_file.write_text("line1\nline2\n")
+
+    monkeypatch.setattr(run_telemetry_matrix, "snapshot_download", lambda **kwargs: tmp_path)
+    monkeypatch.setattr(run_telemetry_matrix, "CpuPeftRuntime", _FakeRuntime)
+
+    exit_code = run_telemetry_matrix.main(
+        [
+            "--model-id",
+            "foo/base",
+            "--model-dir",
+            str(tmp_path / "model"),
+            "--adapter",
+            "demo=foo/adapter",
+            "--prompts",
+            str(prompts_file),
+            "--out",
+            str(tmp_path / "matrix.json"),
+        ]
+    )
+    assert exit_code == 0
+    matrix = json.loads((tmp_path / "matrix.json").read_text())
+    assert matrix[0]["adapter"] == "demo"
 
 
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):
