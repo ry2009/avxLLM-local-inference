@@ -1,4 +1,6 @@
 # avxLLM-local-inference
+![Build](https://github.com/ry2009/avxLLM-local-inference/actions/workflows/build.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 > CPU-native LLM inference engine that fuses base weights, quantized formats, and hot-swappable LoRA adapters to deliver GPU-class throughput on commodity AVX/AMX hardware.
 
 ## Why This Exists
@@ -60,6 +62,7 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `tools/bench` — Google Benchmark harness for GEMMs, attention, tokenizer throughput.
 - `tools/perf` — wrappers for `perf stat`, VTune, and CSV exports consumed by the `reports/` dashboards.
 - `reports/benchmark_usage.md` shows how nightly perf gates are configured.
+- `reports/perf_report.md` captures real fused vs baseline speedups from the C++ benches.
 
 ### 4. Plug-and-Play Scripts
 - `scripts/run_local_inference.py` — downloads `sshleifer/tiny-gpt2` (or the model you choose), runs prompts via `CpuPeftRuntime`, and prints TPS/TTFT metrics.
@@ -71,6 +74,7 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/run_telemetry_matrix.py` — iterates over multiple adapters, runs a shared prompt list, and writes aggregated TPS/TTFT metrics to `reports/telemetry_matrix.json`.
 - `scripts/run_ci_smoke.py` — single-command smoke test (download, generate one prompt, emit metrics) for CI or sanity checks.
 - `scripts/run_throughput_sweep.py` — sweeps prompt lengths (and optional adapters) to output `reports/throughput_sweep.json` for throughput regressions.
+- `scripts/blend_lora_adapters.py` — linearly combines two LoRA adapters into a new one for quick hybrid experiments.
 - `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features
@@ -89,6 +93,7 @@ Read `docs/engine_vision.md` and `docs/engine_roadmap.md` for the full breakdown
 
 For a telemetry deep dive (TPS, TTPS, TTFT, Rust↔C++ hand-off), see `docs/perf_metrics.md`.
 For tuning tips and benchmarking flows, see `docs/throughput_playbook.md`.
+For pre/post training playbooks, check `docs/prepost_playbook.md`.
 For the hands-on lab walkthrough, see `docs/lab_review_checklist.md`.
 For macOS-specific toolchain notes (Homebrew, LLVM, Python/Rust steps), see `docs/mac_setup.md`.
 For a scripted end-to-end walkthrough, see `docs/quickstart_pipeline.md`.

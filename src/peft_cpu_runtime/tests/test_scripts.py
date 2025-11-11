@@ -26,6 +26,8 @@ run_end_to_end = _load_script("run_end_to_end")
 run_telemetry_matrix = _load_script("run_telemetry_matrix")
 run_ci_smoke = _load_script("run_ci_smoke")
 run_throughput_sweep = _load_script("run_throughput_sweep")
+run_blend_adapters = _load_script("blend_lora_adapters")
+run_throughput_sweep = _load_script("run_throughput_sweep")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
@@ -228,6 +230,35 @@ def test_throughput_sweep_threshold(monkeypatch, tmp_path, capsys):
                 "1.0",
             ]
         )
+
+
+def test_blend_adapters(tmp_path):
+    import torch
+    from safetensors.torch import save_file, load_file
+
+    def make_adapter(path: Path, value: float) -> None:
+        path.mkdir(parents=True, exist_ok=True)
+        save_file({"lora": torch.full((2, 2), value)}, str(path / "adapter_model.safetensors"))
+        (path / "adapter_config.json").write_text("{}")
+
+    adapter_a = tmp_path / "a"
+    adapter_b = tmp_path / "b"
+    output = tmp_path / "blend"
+    make_adapter(adapter_a, 1.0)
+    make_adapter(adapter_b, 3.0)
+
+    run_blend_adapters.main([
+        "--adapter-a",
+        str(adapter_a),
+        "--adapter-b",
+        str(adapter_b),
+        "--alpha",
+        "0.25",
+        "--output",
+        str(output),
+    ])
+    blended = load_file(str(output / "adapter_model.safetensors"))
+    assert torch.allclose(blended["lora"], torch.full((2, 2), 2.5))
 
 
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):

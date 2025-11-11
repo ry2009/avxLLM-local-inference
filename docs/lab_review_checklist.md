@@ -20,11 +20,14 @@ engine. Everything below runs on a single macOS workstation.
 4. **Adapter matrix**
    - `make run-telemetry` (or run `scripts/run_telemetry_matrix.py` manually)
      → iterates over multiple adapters, generating `reports/telemetry_matrix.json`.
+   - `make run-throughput` → sweeps prompt lengths and records
+      `reports/throughput_sweep.json`, failing if TPS regresses.
 
 5. **Artifacts to share with reviewers**
    - `reports/ci_smoke_metrics.json`
    - `reports/telemetry_matrix.json`
    - `reports/local_eval_metrics.json`
+   - `reports/perf_report.md`
 
 6. **Optional**
    - `make run-eval` for deterministic JSON prompt files.

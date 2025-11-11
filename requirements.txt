@@ -8,3 +8,4 @@ tqdm==4.66.5
 llama-cpp-python==0.2.90
 plotly==5.24.1
 tokenizers==0.19.1
+safetensors==0.4.3
