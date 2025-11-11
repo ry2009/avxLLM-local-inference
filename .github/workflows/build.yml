@@ -247,7 +247,7 @@ jobs:
         run: pytest src/peft_cpu_runtime/tests -q
 
       - name: Run CI smoke script
-        run: python scripts/run_ci_smoke.py --metrics reports/ci_smoke_metrics.json
+        run: python scripts/run_ci_smoke.py --metrics reports/ci_smoke_metrics.json --min-tps 100 --max-ttft 5
 
       - name: Upload smoke artifact
         uses: actions/upload-artifact@v4

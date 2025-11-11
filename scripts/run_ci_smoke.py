@@ -14,6 +14,7 @@ from peft_cpu_runtime import CpuPeftRuntime, InferenceRequest, InferenceTraceCon
 from peft_cpu_runtime.training.utils import resolve_dtype
 
 DEFAULT_MODEL = "sshleifer/tiny-gpt2"
+DEFAULT_REVISION = "refs/pr/1"  # Tiny GPT-2 safetensors branch
 DEFAULT_PROMPT = "Write one sentence about AVX kernels." 
 
 
@@ -28,8 +29,10 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     parser.add_argument("--prompt", default=DEFAULT_PROMPT)
     parser.add_argument("--max-new-tokens", type=int, default=32)
     parser.add_argument("--token")
-    parser.add_argument("--revision")
+    parser.add_argument("--revision", default=DEFAULT_REVISION)
     parser.add_argument("--metrics", default="reports/ci_smoke_metrics.json")
+    parser.add_argument("--min-tps", type=float)
+    parser.add_argument("--max-ttft", type=float)
     return parser.parse_args(argv)
 
 
@@ -75,9 +78,18 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     payload = {"prompt": args.prompt, "outputs": outputs, "metrics": metrics}
     print(json.dumps(payload, indent=2))
+    failures = []
+    tps = metrics.get("tokens_per_second") or 0.0
+    ttft = metrics.get("avg_ttft_s")
+    if args.min_tps is not None and tps < args.min_tps:
+        failures.append(f"TPS {tps:.2f} < min {args.min_tps}")
+    if args.max_ttft is not None and ttft is not None and ttft > args.max_ttft:
+        failures.append(f"TTFT {ttft:.2f}s > max {args.max_ttft}s")
     metrics_path = Path(args.metrics)
     metrics_path.parent.mkdir(parents=True, exist_ok=True)
     metrics_path.write_text(json.dumps(payload, indent=2))
+    if failures:
+        raise SystemExit("; ".join(failures))
     return 0
 
 
