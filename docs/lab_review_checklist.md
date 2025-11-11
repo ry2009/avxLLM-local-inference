@@ -22,6 +22,8 @@ engine. Everything below runs on a single macOS workstation.
      → iterates over multiple adapters, generating `reports/telemetry_matrix.json`.
    - `make run-throughput` → sweeps prompt lengths and records
       `reports/throughput_sweep.json`, failing if TPS regresses.
+   - `python scripts/run_prompt_benchmark.py --model-id ... --prompts data/math_prompts.jsonl`
+     → produces per-prompt CSV/JSON for labs that want raw numbers.
 
 5. **Artifacts to share with reviewers**
    - `reports/ci_smoke_metrics.json`

@@ -27,13 +27,14 @@ run_telemetry_matrix = _load_script("run_telemetry_matrix")
 run_ci_smoke = _load_script("run_ci_smoke")
 run_throughput_sweep = _load_script("run_throughput_sweep")
 run_blend_adapters = _load_script("blend_lora_adapters")
+run_prompt_benchmark = _load_script("run_prompt_benchmark")
 run_throughput_sweep = _load_script("run_throughput_sweep")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
 
 class _FakeRuntime:
-    def __init__(self, base_model_id, adapter_map, torch_dtype):
+    def __init__(self, base_model_id, adapter_map, torch_dtype, **kwargs):
         self.base_model_id = base_model_id
         self.adapter_map = adapter_map
         self.telemetry = False
@@ -259,6 +260,28 @@ def test_blend_adapters(tmp_path):
     ])
     blended = load_file(str(output / "adapter_model.safetensors"))
     assert torch.allclose(blended["lora"], torch.full((2, 2), 2.5))
+
+
+def test_prompt_benchmark(monkeypatch, tmp_path, capsys):
+    prompts = tmp_path / "prompts.txt"
+    prompts.write_text("hello\nworld\n")
+
+    monkeypatch.setattr(run_prompt_benchmark, "snapshot_download", lambda **kwargs: tmp_path)
+    monkeypatch.setattr(run_prompt_benchmark, "CpuPeftRuntime", _FakeRuntime)
+    exit_code = run_prompt_benchmark.main(
+        [
+            "--model-id",
+            "dummy",
+            "--prompts",
+            str(prompts),
+            "--csv",
+            str(tmp_path / "bench.csv"),
+            "--json",
+            str(tmp_path / "bench.json"),
+        ]
+    )
+    assert exit_code == 0
+    assert (tmp_path / "bench.csv").exists()
 
 
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):

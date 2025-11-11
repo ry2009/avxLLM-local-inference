@@ -152,6 +152,32 @@ def test_runtime_env_threads(monkeypatch):
     assert captured["value"] == 4
 
 
+def test_runtime_interop_threads(monkeypatch):
+    monkeypatch.setattr(runtime_mod, "AutoTokenizer", _FakeAutoTokenizer)
+    monkeypatch.setattr(runtime_mod, "AutoModelForCausalLM", _FakeAutoModel)
+
+    captured = {}
+
+    def fake_set_num_threads(value: int) -> None:
+        pass
+
+    def fake_set_num_interop_threads(value: int) -> None:
+        captured["value"] = value
+
+    monkeypatch.setattr(runtime_mod.torch, "set_num_threads", fake_set_num_threads)
+    monkeypatch.setattr(runtime_mod.torch, "set_num_interop_threads", fake_set_num_interop_threads)
+
+    runtime = runtime_mod.CpuPeftRuntime(
+        base_model_id="dummy",
+        adapter_map={},
+        torch_dtype=torch.float32,
+        num_threads=2,
+        num_interop_threads=3,
+    )
+    assert runtime.num_interop_threads == 3
+    assert captured["value"] == 3
+
+
 def test_token_cache_hits(monkeypatch):
     tokenizer = _CountingTokenizer()
 

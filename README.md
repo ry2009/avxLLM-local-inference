@@ -46,7 +46,7 @@ python tools/download_assets.py \
   --adapter-id theone049/agriqa-tinyllama-lora-adapter --adapter-dir adapters/agriqa
 ```
 Prefer a single command? `scripts/run_local_inference.py` will download `sshleifer/tiny-gpt2`, load an optional adapter, and emit telemetry in one go.
-To pin CPU threads for max throughput, set `INFENG_NUM_THREADS=<logical cores>` before running the scripts (or pass `num_threads` to `CpuPeftRuntime`). Enable prompt caching by exporting `INFENG_TOKEN_CACHE=<size>` or passing `token_cache_size` when constructing the runtime to skip repeated tokenization work.
+To pin CPU threads for max throughput, set `INFENG_NUM_THREADS=<logical cores>` (and optionally `INFENG_NUM_INTEROP_THREADS`) before running the scripts (or pass `num_threads` / `num_interop_threads` to `CpuPeftRuntime`). Enable prompt caching by exporting `INFENG_TOKEN_CACHE=<size>` or passing `token_cache_size` when constructing the runtime to skip repeated tokenization work.
 
 ### 2. Native Engine Build (C++ kernels)
 ```bash
@@ -75,6 +75,7 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - `scripts/run_ci_smoke.py` — single-command smoke test (download, generate one prompt, emit metrics) for CI or sanity checks.
 - `scripts/run_throughput_sweep.py` — sweeps prompt lengths (and optional adapters) to output `reports/throughput_sweep.json` for throughput regressions.
 - `scripts/blend_lora_adapters.py` — linearly combines two LoRA adapters into a new one for quick hybrid experiments.
+- `scripts/run_prompt_benchmark.py` — measures per-prompt TPS/TTFT and writes CSV/JSON summaries for deep dives.
 - `scripts/check_mac_env.py` — quick sanity check that `cmake`, `ninja`, `cargo`, etc. are installed on macOS.
 
 ## Runtime Features

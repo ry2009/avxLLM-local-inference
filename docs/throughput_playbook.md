@@ -6,7 +6,8 @@ Steps to maximize local CPU inference performance on Mac/AVX hosts.
    - Set `INFENG_NUM_THREADS=<logical cores>` before running any runtime-based
      scripts, or pass `num_threads` when instantiating `CpuPeftRuntime`. The
      runtime now calls `torch.set_num_threads` and records the configured value
-     so you can inspect it later.
+     so you can inspect it later. For interop pools, set
+     `INFENG_NUM_INTEROP_THREADS` or pass `num_interop_threads`.
 
 2. **Cache prompts**
    - Export `INFENG_TOKEN_CACHE=<entries>` (or pass `token_cache_size`) to avoid
@@ -22,6 +23,8 @@ Steps to maximize local CPU inference performance on Mac/AVX hosts.
      TPS/TTFT across adapters.
    - `python scripts/run_throughput_sweep.py --adapter base= --lengths 32,64,128`
      writes `reports/throughput_sweep.json` with tokens/sec per prompt length.
+   - `python scripts/run_prompt_benchmark.py --model-id ... --prompts data/math_prompts.jsonl`
+      produces per-prompt CSV/JSON for labs that want fine-grained diffs.
 
 4. **Compare changes**
    - Keep `reports/telemetry_matrix.json` and `reports/throughput_sweep.json`

@@ -70,6 +70,7 @@ class CpuPeftRuntime:
         torch_dtype: torch.dtype = torch.float32,
         use_fast_tokenizer: bool = True,
         num_threads: Optional[int] = None,
+        num_interop_threads: Optional[int] = None,
         token_cache_size: int = 0,
     ) -> None:
         """
@@ -107,6 +108,18 @@ class CpuPeftRuntime:
         if thread_override is not None:
             torch.set_num_threads(thread_override)
         self._num_threads = thread_override
+
+        interop_override = num_interop_threads
+        if interop_override is None:
+            env_interop = os.environ.get("INFENG_NUM_INTEROP_THREADS")
+            if env_interop:
+                try:
+                    interop_override = int(env_interop)
+                except ValueError:
+                    raise ValueError("INFENG_NUM_INTEROP_THREADS must be an integer") from None
+        if interop_override is not None and hasattr(torch, "set_num_interop_threads"):
+            torch.set_num_interop_threads(interop_override)
+        self._num_interop_threads = interop_override
 
         cache_size = token_cache_size
         if cache_size <= 0:
@@ -321,6 +334,10 @@ class CpuPeftRuntime:
     @property
     def token_cache_size(self) -> int:
         return self._token_cache_size
+
+    @property
+    def num_interop_threads(self) -> Optional[int]:
+        return self._num_interop_threads
 
     def get_last_profile(self) -> Optional[List[Dict[str, float]]]:
         return self._last_profile
