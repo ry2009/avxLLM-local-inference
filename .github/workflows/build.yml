@@ -223,6 +223,38 @@ jobs:
             reports/attn_decode.csv
             reports/attn_decode_summary.json
 
+  python-smoke:
+    runs-on: ubuntu-22.04
+    needs: linux
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare Hugging Face cache
+        run: mkdir -p "$HF_HOME"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Run pytest (Python suite)
+        run: pytest src/peft_cpu_runtime/tests -q
+
+      - name: Run CI smoke script
+        run: python scripts/run_ci_smoke.py --metrics reports/ci_smoke_metrics.json
+
+      - name: Upload smoke artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-smoke-metrics
+          path: reports/ci_smoke_metrics.json
+
   scheduler-zipf-perf:
     runs-on: ubuntu-22.04
     needs: linux

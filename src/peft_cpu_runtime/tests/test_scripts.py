@@ -208,6 +208,28 @@ def test_run_throughput_sweep(monkeypatch, tmp_path, capsys):
     assert data[0]["length"] == 8
 
 
+def test_throughput_sweep_threshold(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(run_throughput_sweep, "snapshot_download", lambda **kwargs: tmp_path)
+
+    class _SlowRuntime(_FakeRuntime):
+        def benchmark(self, batch, num_warmup, num_iters):
+            return {"tokens_per_second": 0.1, "avg_ttft_s": 1.5, "iterations": []}
+
+    monkeypatch.setattr(run_throughput_sweep, "CpuPeftRuntime", _SlowRuntime)
+
+    with pytest.raises(SystemExit):
+        run_throughput_sweep.main(
+            [
+                "--lengths",
+                "8",
+                "--min-tps",
+                "1.0",
+                "--max-ttft",
+                "1.0",
+            ]
+        )
+
+
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):
     dataset = tmp_path / "train.jsonl"
     dataset.write_text('{"text": "prompt"}\n')

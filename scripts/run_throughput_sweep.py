@@ -27,6 +27,8 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument("--token")
     parser.add_argument("--revision")
     parser.add_argument("--out", default="reports/throughput_sweep.json")
+    parser.add_argument("--min-tps", type=float)
+    parser.add_argument("--max-ttft", type=float)
     return parser.parse_args(argv)
 
 
@@ -87,6 +89,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         adapter_specs["base"] = ""
 
     results = []
+    threshold_violations = []
+
     for name, repo in adapter_specs.items():
         if repo:
             adapter_path = Path(repo)
@@ -108,19 +112,29 @@ def main(argv: Optional[List[str]] = None) -> int:
             )
             _ = runtime.generate(batch)
             metrics = runtime.benchmark(batch, num_warmup=0, num_iters=1)
-            results.append(
-                {
-                    "adapter": name,
-                    "length": length,
-                    "tokens_per_second": metrics.get("tokens_per_second"),
-                    "avg_ttft_s": metrics.get("avg_ttft_s"),
-                }
-            )
+            entry = {
+                "adapter": name,
+                "length": length,
+                "tokens_per_second": metrics.get("tokens_per_second"),
+                "avg_ttft_s": metrics.get("avg_ttft_s"),
+            }
+            results.append(entry)
+
+            if args.min_tps is not None and (entry["tokens_per_second"] or 0) < args.min_tps:
+                threshold_violations.append(
+                    f"TPS {entry['tokens_per_second']:.3f} < min {args.min_tps} for adapter {name} length {length}"
+                )
+            if args.max_ttft is not None and entry["avg_ttft_s"] is not None and entry["avg_ttft_s"] > args.max_ttft:
+                threshold_violations.append(
+                    f"TTFT {entry['avg_ttft_s']:.3f}s > max {args.max_ttft}s for adapter {name} length {length}"
+                )
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(results, indent=2))
     print(json.dumps(results, indent=2))
+    if threshold_violations:
+        raise SystemExit("\n".join(threshold_violations))
     return 0
 
 
