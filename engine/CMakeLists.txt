@@ -80,7 +80,6 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E env "RUSTFLAGS=${_effective_rustflags}" ${CARGO_BIN} build --release --target-dir ${FASTTOK_TARGET_DIR}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/engine/tokenizer
     COMMENT "Building fasttok tokenizer runtime"
-    BYPRODUCTS ${FASTTOK_LIB}
     VERBATIM)
 
 add_custom_target(fasttok_build DEPENDS ${FASTTOK_LIB})

@@ -37,6 +37,13 @@ peft-cpu-run infer meta-llama/Llama-3.2-1B \
 ```
 Outputs are printed as JSON. Enable telemetry (`--telemetry`) to stream runtime metrics into `reports/runtime_metrics.csv`.
 
+Need sample weights fast? Use the downloader (set `HF_TOKEN` if the repos are gated):
+```bash
+python tools/download_assets.py \
+  --model-id TinyLlama/TinyLlama-1.1B-Chat-v1.0 --model-dir models/tinyllama-chat \
+  --adapter-id theone049/agriqa-tinyllama-lora-adapter --adapter-dir adapters/agriqa
+```
+
 ### 2. Native Engine Build (C++ kernels)
 ```bash
 cmake -S . -B build -G Ninja \
@@ -66,6 +73,8 @@ Requirements: CMake ≥3.25, Ninja/Make, Python 3.12, a C++20 compiler with AVX2
 - **Tokenizer service** keeps the Rust-backed tokenizer hot, caches prefixes, and streams tokens into the decode loop to hide CPU overhead.
 Read `docs/engine_vision.md` and `docs/engine_roadmap.md` for the full breakdown of milestones, risks, and mitigation plans.
 
+For a telemetry deep dive (TPS, TTPS, TTFT, Rust↔C++ hand-off), see `docs/perf_metrics.md`.
+
 ## Development Workflow
 1. Prototype in Python (`peft_cpu_runtime`) to validate scheduler or telemetry ideas.
 2. Port hot paths into `engine/` kernels, backing them with Catch2/GoogleTest fixtures in `tests/`.
@@ -79,3 +88,7 @@ Read `docs/engine_vision.md` and `docs/engine_roadmap.md` for the full breakdown
 
 ## License
 Released under the MIT License (see `LICENSE`).
+
+## CI & Secrets
+`docs/ci_setup.md` lists the optional `HF_TOKEN` secret so GitHub Actions can prefetch
+Hugging Face artifacts without hitting anonymous rate limits.

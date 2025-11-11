@@ -164,6 +164,7 @@ def _run_inference(args: argparse.Namespace) -> None:
         from infeng.runtime import runtime as engine_runtime, EngineConfig
 
         engine_runtime.initialize(EngineConfig(enable_metrics=True))
+        runtime.enable_profiling(True)
 
     trace = InferenceTraceConfig(
         max_new_tokens=args.max_new_tokens,
@@ -328,4 +329,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

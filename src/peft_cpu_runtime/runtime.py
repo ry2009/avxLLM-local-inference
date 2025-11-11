@@ -173,6 +173,8 @@ class CpuPeftRuntime:
 
                 adapter_outputs = []
                 generation_elapsed = 0.0
+                group_start = time.perf_counter() if profile_groups is not None else None
+                ttft = None
                 for row_idx, request in enumerate(requests):
                     req_config = GenerationConfig.from_dict(generation_config.to_dict())
                     req_config.max_new_tokens = max_new_tokens_override[row_idx]
@@ -184,7 +186,10 @@ class CpuPeftRuntime:
                             generation_config=req_config,
                         )
                         if gen_start is not None:
-                            generation_elapsed += time.perf_counter() - gen_start
+                            gen_end = time.perf_counter()
+                            generation_elapsed += gen_end - gen_start
+                            if ttft is None and group_start is not None:
+                                ttft = gen_end - group_start
                     generated_tokens = generated[0][input_lengths[row_idx] :]
                     decoded = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
                     if batch.trace_config.stop_sequences:
@@ -198,6 +203,7 @@ class CpuPeftRuntime:
                             "tokenize_s": tokenize_elapsed or 0.0,
                             "generate_s": generation_elapsed,
                             "num_requests": len(requests),
+                            "ttft_s": ttft or 0.0,
                         }
                     )
         finally:
@@ -236,6 +242,8 @@ class CpuPeftRuntime:
         total_time = 0.0
         total_new_tokens = 0
         total_sequences = 0
+        total_ttft = 0.0
+        ttft_samples = 0
         iter_stats = []
 
         for _ in range(num_iters):
@@ -257,6 +265,12 @@ class CpuPeftRuntime:
             }
             if self._profiling_enabled and self._last_profile is not None:
                 iter_entry["profiling"] = self._last_profile
+                ttft_values = [grp.get("ttft_s", 0.0) for grp in self._last_profile if grp.get("ttft_s", 0.0) > 0]
+                if ttft_values:
+                    ttft_sample = min(ttft_values)
+                    iter_entry["ttft_s"] = ttft_sample
+                    total_ttft += ttft_sample
+                    ttft_samples += 1
             iter_stats.append(iter_entry)
 
         return {
@@ -264,6 +278,7 @@ class CpuPeftRuntime:
             "seq_per_second": total_sequences / total_time if total_time else 0.0,
             "tokens_per_second": total_new_tokens / total_time if total_time else 0.0,
             "total_new_tokens": total_new_tokens,
+            "avg_ttft_s": (total_ttft / ttft_samples) if ttft_samples else None,
             "iterations": iter_stats,
         }
 
