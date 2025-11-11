@@ -24,6 +24,7 @@ run_local_inference = _load_script("run_local_inference")
 run_local_eval = _load_script("run_local_eval")
 run_end_to_end = _load_script("run_end_to_end")
 run_telemetry_matrix = _load_script("run_telemetry_matrix")
+run_ci_smoke = _load_script("run_ci_smoke")
 download_manifest = _load_script("download_manifest")
 check_mac_env = _load_script("check_mac_env")
 
@@ -166,6 +167,23 @@ def test_run_telemetry_matrix(monkeypatch, tmp_path, capsys):
     assert exit_code == 0
     matrix = json.loads((tmp_path / "matrix.json").read_text())
     assert matrix[0]["adapter"] == "demo"
+
+
+def test_run_ci_smoke(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(run_ci_smoke, "snapshot_download", lambda **kwargs: tmp_path)
+    monkeypatch.setattr(run_ci_smoke, "CpuPeftRuntime", _FakeRuntime)
+
+    exit_code = run_ci_smoke.main([
+        "--model-id",
+        "foo/base",
+        "--model-dir",
+        str(tmp_path / "model"),
+        "--metrics",
+        str(tmp_path / "metrics.json"),
+    ])
+    assert exit_code == 0
+    payload = json.loads((tmp_path / "metrics.json").read_text())
+    assert "metrics" in payload
 
 
 def test_run_end_to_end_script(monkeypatch, tmp_path, capsys):

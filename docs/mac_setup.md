@@ -48,6 +48,7 @@ ctest --test-dir build --output-on-failure
 - `scripts/run_end_to_end.py` — orchestrates download + LoRA training + evaluation (see `docs/quickstart_pipeline.md`).
 - `scripts/download_manifest.py` — prefetch the assets listed in `configs/sample_assets.json` so demos work offline.
 - `scripts/run_telemetry_matrix.py` — iterate through multiple adapters and export TPS/TTFT aggregates.
+- `scripts/run_ci_smoke.py` — quick sanity check that downloads a model and emits telemetry JSON.
 
 ## 6. Makefile shortcuts
 ```bash
@@ -59,6 +60,7 @@ make run-eval     # run the dataset-driven eval script + telemetry export
 make run-pipeline # end-to-end download/train/eval loop
 make run-telemetry# gather TPS/TTFT matrix across adapters
 make run-manifest # download the sample asset manifest
+make run-ci-smoke # quick single-prompt telemetry sanity check
 make check-mac    # run scripts/check_mac_env.py to confirm toolchain availability
 ```
 
